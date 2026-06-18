@@ -1,5 +1,1067 @@
 <!DOCTYPE html>
-<html>
-  <head><meta charset="UTF-8"></head>
-  <body></body>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>omphi</title>
+  <link rel="stylesheet" href="./style.css" />
+
+  <script
+    type="module"
+    src="https://cdnjs.cloudflare.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js">
+  </script>
+</head>
+
+<body>
+
+  <div class="custom-cursor"></div>
+
+  <!-- =========================
+    HERO
+  ========================== -->
+  <header class="hero section" id="hero">
+    <div class="floating-widget">
+      <button data-target="story">Story</button>
+      <button data-target="pet">Pet</button>
+      <button data-target="hub">Hub</button>
+      <button data-target="package">Package</button>
+    </div>
+
+    <img src="./assets/images/hero-bg-motif.png" class="motif-bg" alt="">
+
+    <!-- 왼쪽 펫 -->
+    <div
+      class="pet-wrap pet-left-wrap"
+      data-max-x="3.8"
+      data-max-y="1.4"
+      data-offset-x="-1"
+      data-offset-y="0"
+    >
+      <div class="pet-glow pet-glow-cream"></div>
+      <div class="pet-glow pet-glow-cream soft"></div>
+
+      <img
+        src="./assets/images/pet-left.png"
+        class="hero-pet"
+        alt="blue omphi pet"
+      >
+
+      <img
+        src="./assets/images/pet-left-eye.png"
+        class="pet-pupil"
+        alt=""
+      >
+    </div>
+
+    <!-- 오른쪽 펫 -->
+    <div
+      class="pet-wrap pet-right-wrap"
+      data-max-x="3.8"
+      data-max-y="1.4"
+      data-offset-x="1"
+      data-offset-y="0"
+    >
+      <div class="pet-glow pet-glow-cream"></div>
+      <div class="pet-glow pet-glow-cream soft"></div>
+
+      <img
+        src="./assets/images/pet-right.png"
+        class="hero-pet"
+        alt="pink omphi pet"
+      >
+
+      <img
+        src="./assets/images/pet-right-eye.png"
+        class="pet-pupil"
+        alt=""
+      >
+    </div>
+
+    <img
+      src="./assets/images/logo-omphi.png"
+      class="hero-logo"
+      alt="omphi logo"
+    >
+  </header>
+
+  <!-- =========================
+    STORY
+  ========================== -->
+  <section class="section story" id="story">
+    <div class="section-inner narrow">
+      <div class="story-brand">
+        <p class="story-kicker">
+          마음의 배꼽, <span>Omphi!</span>
+        </p>
+
+        <p class="story-subtitle">
+          말하지 않아도 전해지는 엄마와 딸의 마음
+        </p>
+      </div>
+
+      <p>
+        omphi는 엄마와 딸을 잇는 ‘배꼽(omphalos)’에서 시작되었습니다.
+      </p>
+
+      <p>
+        배꼽은 한 몸이었던 시간의 증표이자, 탯줄이 끊어진 이후에도<br>
+        여전히 서로 닮아 있는 엄마와 딸을 증명하는 흔적이에요.<br>
+        몸은 분리되었지만 보이지 않는 마음으로 연결되어 있는<br>
+        그 특별한 관계 사이에 omphi가 있습니다.
+      </p>
+
+      <p>
+        말이 막힐 때, 손이 먼저 움직이도록.<br>
+        가장 가깝지만 때로는 솔직한 마음을 꺼내기 어려워<br>
+        오해하고 서툴게 어긋나기도 해요.<br>
+        omphi는 독립적이고 싶은 마음과 연결되어 있고 싶은 복잡한 감정 사이에서,<br>
+        그 무거운 마음을 말랑말랑하게 풀어주기 위해 태어났습니다.
+      </p>
+
+      <p>
+        서로를 생각하는 엄마와 딸의 크고 작은 마음들,<br>
+        굳이 긴 말로 설명하지 않아도 돼요.<br>
+        omphi가 당신의 마음을 서로에게 고스란히 전해드릴게요.
+      </p>
+    </div>
+  </section>
+
+  <!-- =========================
+    INTRO FILM
+  ========================== -->
+  <section class="section video-section" id="intro">
+    <div class="section-inner">
+      <div class="film-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/gjb4QVQwdbw"
+          title="omphi intro film"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+    LOVE COPY
+  ========================== -->
+  <section class="section love-copy">
+    <img
+      src="./assets/images/love-motif.png"
+      class="love-motif"
+      alt="omphi motif"
+    >
+
+    <p>
+      사랑은
+      <span class="bouncy-word" aria-label="말랑말랑">
+        <span style="--i:0">말</span>
+        <span style="--i:1">랑</span>
+        <span style="--i:2">말</span>
+        <span style="--i:3">랑</span>
+      </span>
+      한거야!
+    </p>
+  </section>
+
+  <!-- =========================
+    PET GUIDE
+  ========================== -->
+  <section class="section product" id="pet">
+    <div class="pet-guide-layout">
+
+      <!-- 상단 묶음: Omphi Pet device + 작은 PNG -->
+      <div class="major-title-head is-light pet-major-head">
+        <p class="major-title-label">Omphi Pet</p>
+
+        <p class="major-title-main">
+          말랑말랑한 마음을<br>
+          서로에게 전해주는 펫
+        </p>
+
+        <p class="major-title-desc">
+          말랑말랑! Omphi는 손에 쥐면 자꾸 만지고 싶어지는 펫이에요.<br>
+          말이 어려운 순간에도 손은 먼저 움직일 수 있도록,<br>
+          엄마와 딸 사이의 감정을 부드럽게 이어주는 매개체가 되어줄 거에요.
+        </p>
+
+        <img
+          src="./assets/images/pet-guide-title.png"
+          class="pet-title-motif"
+          alt="omphi pet guide motif"
+        >
+      </div>
+
+      <!-- 메인 묶음: 왼쪽 설명 + 가운데 펫 + 오른쪽 설명 -->
+      <div class="pet-main-wrap">
+
+        <!-- 왼쪽 설명 -->
+        <div class="pet-side-copy pet-side-left">
+          <h3>몸통 꾹!</h3>
+
+          <p class="copy-lead">
+            나와 펫 사이의 상호작용을 쌓아가는 방식
+          </p>
+
+          <ul class="copy-list">
+            <li>
+              <strong>가볍게 누르면</strong>
+              <span>Omphi가 반짝이며 깨어나요.</span>
+            </li>
+
+            <li>
+              <strong>3초간 감싸 안으면</strong>
+              <span>애교를 부리며 기뻐해요.</span>
+            </li>
+
+            <li>
+              <strong>꼭 쥐면</strong>
+              <span>놀라고, 감정을 더 또렷하게 반응해요.</span>
+            </li>
+
+            <li>
+              <strong>토닥토닥 두드리면</strong>
+              <span>장난기 가득한 표정을 지어요.</span>
+            </li>
+          </ul>
+
+          <p class="copy-note">
+            은은하게 빛나는 반투명한 말랑한 재질로<br>
+            손에 닿는 감정까지 부드럽게 전달해요.
+          </p>
+        </div>
+
+        <!-- 가운데 제품 -->
+        <div class="pet-center-wrap">
+          <div class="pet-click-area" id="petClickArea">
+
+            <button class="pet-click-button" id="openPetInline">
+              click here!
+            </button>
+
+            <button class="pet-back-button" id="backPetInline">
+              back
+            </button>
+
+            <img
+              src="./assets/images/pet-click-blue.png"
+              class="pet-click-image"
+              alt="omphi pet icon"
+            >
+
+            <model-viewer
+              class="pet-model-viewer"
+              src="./assets/models/omphi_render_for_GLB_6.17_5.glb"
+              alt="omphi pet 3D model"
+
+              camera-controls
+              auto-rotate
+              auto-rotate-delay="0"
+              rotation-per-second="20deg"
+              disable-zoom
+              interaction-prompt="none"
+
+              environment-image="neutral"
+              shadow-intensity="0"
+              exposure="0.90"
+              camera-orbit="0deg 75deg 120%"
+              field-of-view="30deg"
+
+              style="background: transparent; --poster-color: transparent;">
+            </model-viewer>
+
+            <div class="guide-line guide-line-left"></div>
+            <div class="guide-line guide-line-right"></div>
+          </div>
+        </div>
+
+        <!-- 오른쪽 설명 -->
+        <div class="pet-side-copy pet-side-right">
+          <h3>코어 꾹!</h3>
+
+          <p class="copy-lead">
+            상대에게 신호를 전하고 연결을 여는 방식
+          </p>
+
+          <ul class="copy-list">
+            <li>
+              <strong>코어를 누르면</strong>
+              <span>상대 Omphi에게 마음 신호가 전송돼요.</span>
+            </li>
+
+            <li>
+              <strong>상대가 신호를 받으면</strong>
+              <span>코어가 빛나고 표정이 바뀌어요.</span>
+            </li>
+
+            <li>
+              <strong>응답이 없으면</strong>
+              <span>신호는 조용히 사라져요.</span>
+            </li>
+
+            <li>
+              <strong>둘이 연결되면</strong>
+              <span>빛과 색으로 서로의 감정을 주고받아요.</span>
+            </li>
+          </ul>
+
+          <p class="copy-note">
+            말 대신 빛으로, 터치 대신 감각으로.<br>
+            말랑한 연결이 조용히 마음을 이어줘요.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+    EXPRESSION
+  ========================== -->
+  <section class="section expression" id="expression">
+
+    <div class="expression-symbols"></div>
+
+    <div class="expression-row">
+
+      <!-- 1 -->
+      <div class="expression-item">
+        <img src="./assets/images/blue-sleep.png" class="expression-img expression-default" alt="">
+        <img src="./assets/images/pink-basic.png" class="expression-img expression-hover" alt="">
+      </div>
+
+      <!-- 2 -->
+      <div class="expression-item">
+        <img src="./assets/images/blue-cry.png" class="expression-img expression-default" alt="">
+        <img src="./assets/images/pink-shiny.png" class="expression-img expression-hover" alt="">
+      </div>
+
+      <!-- 3 -->
+      <div class="expression-item">
+        <img src="./assets/images/blue-basic.png" class="expression-img expression-default" alt="">
+        <img src="./assets/images/pink-cry.png" class="expression-img expression-hover" alt="">
+      </div>
+
+      <!-- 4 -->
+      <div class="expression-item">
+        <img src="./assets/images/blue-shiny.png" class="expression-img expression-default" alt="">
+        <img src="./assets/images/pink-wink.png" class="expression-img expression-hover" alt="">
+      </div>
+
+      <!-- 5 -->
+      <div class="expression-item">
+        <img src="./assets/images/blue-surprised.png" class="expression-img expression-default" alt="">
+        <img src="./assets/images/pink-smile.png" class="expression-img expression-hover" alt="">
+      </div>
+
+      <!-- 6 -->
+      <div class="expression-item">
+        <img src="./assets/images/blue-star.png" class="expression-img expression-default" alt="">
+        <img src="./assets/images/pink-squeeze.png" class="expression-img expression-hover" alt="">
+      </div>
+
+      <!-- 7 -->
+      <div class="expression-item">
+        <img src="./assets/images/blue-squeeze.png" class="expression-img expression-default" alt="">
+        <img src="./assets/images/pink-shiny.png" class="expression-img expression-hover" alt="">
+      </div>
+
+      <!-- 8 -->
+      <div class="expression-item">
+        <img src="./assets/images/blue-smile.png" class="expression-img expression-default" alt="">
+        <img src="./assets/images/pink-sleep.png" class="expression-img expression-hover" alt="">
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================
+    PET TO PET CONTACT
+  ========================== -->
+  <section class="section contact" id="contact">
+    <div class="contact-inner">
+
+      <div class="contact-copy">
+        <p class="contact-kicker">Pet to Pet Interaction</p>
+        <p class="contact-title">
+          마음이 도착하면,<br>
+          Omphi가 먼저 반응해요.
+        </p>
+      </div>
+
+      <div class="contact-video-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/kMOkN2JBj7M"
+          title="omphi pet to pet interaction film"
+          frameborder="0"
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================
+    HUB DEVICE
+  ========================== -->
+  <section class="hub-transition" aria-hidden="true"></section>
+  
+  <section class="section hub" id="hub">
+    <div class="hub-layout">
+
+      <div class="major-title-head is-dark">
+        <p class="major-title-label">Omphi Symbol Hub</p>
+
+        <p class="major-title-main">
+          말 대신 떠오르는 심볼로<br>
+          대화를 열어주는 허브
+        </p>
+
+        <p class="major-title-desc">
+          Omphi를 허브에 붙이면, 말로 꺼내기 어려웠던 마음이 심볼로 떠올라요.<br>
+          만들어진 심볼을 함께 보며 자연스럽게 대화를 시작할 수 있어요.
+        </p>
+      </div>
+
+      <div class="hub-model-center">
+        <div class="hub-model-wrap">
+          <model-viewer
+            class="hub-model-viewer"
+            src="./assets/models/omphi-hub.glb"
+            alt="omphi symbol hub 3D model"
+
+            camera-controls
+            auto-rotate
+            auto-rotate-delay="0"
+            rotation-per-second="18deg"
+            disable-zoom
+            interaction-prompt="none"
+
+            environment-image="neutral"
+            shadow-intensity="0"
+            exposure="0.82"
+            camera-orbit="0deg 72deg 120%"
+            field-of-view="30deg"
+
+            style="background: transparent; --poster-color: transparent;">
+          </model-viewer>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================
+    DOCKING
+  ========================== -->
+
+  <section class="section docking" id="docking">
+    <div class="dock-layout">
+
+      <p class="dock-device-label">Make Your Symbol</p>
+
+      <p class="dock-desc">
+        Omphi를 허브에 부착하면 오늘의 주제와 감정을 고를 수 있어요,<br>
+        선택한 주제와 감정은 하나의 심볼이 되어 허브에 떠올라요.<br>
+        같은 심볼이 떠오른다면, 서로가 선택한 키워드가 같다는 뜻이에요!
+      </p>
+
+      <p class="dock-guide">
+        딸이라면 <span class="guide-blue">푸른 Omphi</span>를,
+        엄마라면 <span class="guide-pink">핑크 Omphi</span>를 눌러 시작해보세요.
+      </p>
+
+      <div class="dock-stage" id="dockStage">
+
+        <!-- 파란 펫 / 딸 -->
+        <button class="dock-pet dock-pet-daughter" data-owner="daughter">
+          <img src="./assets/images/omphi_web_motif-26.png" alt="daughter omphi pet">
+        </button>
+
+        <!-- 허브 -->
+        <div class="dock-hub" id="dockHub">
+          <div class="dock-hub-glow"></div>
+
+          <!-- 제작된 심볼이 뜨는 영역 -->
+          <div class="hub-symbol-screen">
+            <div class="hub-symbol-stage" id="hubSymbolStage"></div>
+          </div>
+
+          <!-- 허브 기본 UI -->
+          <div class="dock-hub-face">
+            <div class="dock-hub-core"></div>
+            <div class="dock-hub-ring"></div>
+            <div class="dock-hub-ring small"></div>
+          </div>
+
+          <p class="dock-hub-status">Omphi를 눌러 시작해요</p>
+        </div>
+
+        <!-- 핑크 펫 / 엄마 -->
+        <button class="dock-pet dock-pet-mom" data-owner="mom">
+          <img src="./assets/images/omphi_web_motif-27.png" alt="mom omphi pet">
+        </button>
+
+      </div>
+
+      <button class="dock-reset-symbol" id="dockResetSymbol">
+        reset symbol
+      </button>
+
+      <!-- 선택 패널 -->
+      <div class="dock-choice-panel" id="dockChoicePanel">
+        <p class="dock-choice-title">
+          <span id="dockOwnerLabel">omphi</span>의 마음을 골라주세요
+        </p>
+
+        <div class="dock-choice-columns">
+          <div class="dock-choice-group">
+            <p>topic</p>
+            <button data-topic="career">진로</button>
+            <button data-topic="love">연애</button>
+            <button data-topic="health">건강</button>
+            <button data-topic="money">돈</button>
+            <button data-topic="future">미래</button>
+            <button data-topic="dream">꿈</button>
+            <button data-topic="independence">독립</button>
+            <button data-topic="family">가족</button>
+            <button data-topic="study">공부</button>
+            <button data-topic="work">일</button>
+          </div>
+
+          <div class="dock-choice-group">
+            <p>feeling</p>
+            <button data-feel="anxiety">불안</button>
+            <button data-feel="longing">그리움</button>
+            <button data-feel="warmth">따뜻함</button>
+            <button data-feel="waiting">기다림</button>
+            <button data-feel="loneliness">외로움</button>
+            <button data-feel="joy">기쁨</button>
+            <button data-feel="sadness">슬픔</button>
+            <button data-feel="stuffy">답답함</button>
+            <button data-feel="thanks">고마움</button>
+            <button data-feel="flutter">설렘</button>
+          </div>
+
+        </div>
+
+        <button class="dock-make-symbol" id="dockMakeSymbol">
+          make symbol
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================
+    SYMBOLS
+  ========================== -->
+  <section class="section symbols" id="symbols">
+    <div class="symbol-section-inner">
+
+      <p class="symbol-section-label">Symbol Dictionary</p>
+
+      <p class="symbol-section-desc">
+        마음의 주제와 감정은 각각 하나의 심볼로 번역돼요.<br>
+        카드를 눌러 심볼이 담고 있는 키워드를 확인해보세요.
+      </p>
+
+      <!-- Topic -->
+      <div class="symbol-category">
+        <p class="symbol-category-title">Topic Symbols</p>
+
+        <div class="symbol-card-grid topic-symbol-grid">
+
+          <button class="flip-symbol-card topic-card" data-symbol-id="06" data-keyword="진로">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-06.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-06.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>진로</strong>
+                <small>career</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card topic-card" data-symbol-id="07" data-keyword="연애">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-07.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-07.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>연애</strong>
+                <small>love</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card topic-card" data-symbol-id="08" data-keyword="건강">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-08.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-08.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>건강</strong>
+                <small>health</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card topic-card" data-symbol-id="09" data-keyword="돈">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-09.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-09.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>돈</strong>
+                <small>money</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card topic-card" data-symbol-id="10" data-keyword="미래">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-10.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-10.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>미래</strong>
+                <small>future</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card topic-card" data-symbol-id="11" data-keyword="꿈">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-11.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-11.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>꿈</strong>
+                <small>dream</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card topic-card" data-symbol-id="12" data-keyword="독립">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-12.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-12.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>독립</strong>
+                <small>independence</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card topic-card" data-symbol-id="13" data-keyword="가족">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-13.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-13.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>가족</strong>
+                <small>family</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card topic-card" data-symbol-id="14" data-keyword="공부">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-14.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-14.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>공부</strong>
+                <small>study</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card topic-card" data-symbol-id="15" data-keyword="일">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-15.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-15.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>일</strong>
+                <small>work</small>
+              </span>
+            </span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Feeling -->
+      <div class="symbol-category feeling-category">
+        <p class="symbol-category-title">Feeling Symbols</p>
+
+        <div class="symbol-card-grid feeling-symbol-grid">
+
+          <button class="flip-symbol-card feeling-card" data-symbol-id="16" data-keyword="불안">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-16.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-16.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>불안</strong>
+                <small>anxiety</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card feeling-card" data-symbol-id="17" data-keyword="그리움">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-17.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-17.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>그리움</strong>
+                <small>longing</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card feeling-card" data-symbol-id="18" data-keyword="따뜻함">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-18.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-18.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>따뜻함</strong>
+                <small>warmth</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card feeling-card" data-symbol-id="19" data-keyword="기다림">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-19.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-19.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>기다림</strong>
+                <small>waiting</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card feeling-card" data-symbol-id="20" data-keyword="외로움">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-20.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-20.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>외로움</strong>
+                <small>loneliness</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card feeling-card" data-symbol-id="21" data-keyword="기쁨">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-21.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-21.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>기쁨</strong>
+                <small>joy</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card feeling-card" data-symbol-id="22" data-keyword="슬픔">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-22.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-22.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>슬픔</strong>
+                <small>sadness</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card feeling-card" data-symbol-id="23" data-keyword="답답함">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-23.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-23.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>답답함</strong>
+                <small>stuffy</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card feeling-card" data-symbol-id="24" data-keyword="고마움">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-24.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-24.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>고마움</strong>
+                <small>thanks</small>
+              </span>
+            </span>
+          </button>
+
+          <button class="flip-symbol-card feeling-card" data-symbol-id="25" data-keyword="설렘">
+            <span class="flip-card-inner">
+              <span class="flip-card-face flip-card-front">
+                <span class="symbol-float-wrap">
+                  <span class="symbol-layer symbol-bone" style="--mask:url('./assets/images/symbol-bone/symbol-bone-25.svg');"></span>
+                  <span class="symbol-layer symbol-core" style="--mask:url('./assets/images/symbol-core/symbol-core-25.svg');"></span>
+                </span>
+              </span>
+              <span class="flip-card-face flip-card-back">
+                <strong>설렘</strong>
+                <small>flutter</small>
+              </span>
+            </span>
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================
+    HUB FILM
+  ========================== -->
+  <section class="section hub-film" id="hub-film">
+    <div class="hub-film-inner">
+
+      <div class="hub-film-copy">
+        <p class="hub-film-kicker">Hub Interaction</p>
+        <p class="hub-film-title">
+          심볼이 만들어지면,<br>
+          마음이 허브 위에 떠올라요.
+        </p>
+      </div>
+
+      <div class="hub-film-video-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/Pwx3C7k4qqY"
+          title="omphi hub interaction film"
+          frameborder="0"
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================
+    PACKAGE
+  ========================== -->
+  <section class="section package" id="package">
+    <div class="package-inner">
+
+      <div class="major-title-head is-blue">
+        <p class="major-title-label">Package Image</p>
+
+        <p class="major-title-main">
+          마음을 꺼내 보기 전,<br>
+          먼저 만나는 Omphi의 얼굴
+        </p>
+
+        <p class="major-title-desc">
+          Omphi의 패키지는 제품을 보호하는 동시에, Omphi의 첫인상이기도 해요.<br>
+          말랑한 손잡이, 투명한 블리스터, 리플릿과 기호카드가 함께 구성되어<br>
+          제품을 꺼내기 전부터 Omphi의 세계를 경험할 수 있어요.
+        </p>
+      </div>
+
+      <div class="package-hero-grid">
+        <figure class="package-shot package-shot-front">
+          <img src="./assets/images/package-front.png" alt="omphi package front view">
+          <figcaption>Front Package</figcaption>
+        </figure>
+
+        <figure class="package-shot package-shot-back">
+          <img src="./assets/images/package-back.png" alt="omphi package back view">
+          <figcaption>Back Package</figcaption>
+        </figure>
+      </div>
+
+      <div class="package-loose-stage">
+
+        <button class="loose-item loose-brand" type="button" data-item="brand">
+          <img src="./assets/images/leaflet-brand-cover.png" alt="brand story leaflet">
+          
+        </button>
+
+        <button class="loose-item loose-minibook" type="button" data-item="minibook">
+          <img src="./assets/images/leaflet-minibook-cover.png" alt="omphi minibook">
+          
+        </button>
+
+        <button class="loose-item loose-symbol" type="button" data-item="symbol">
+          <img src="./assets/images/symbol-card-front.png" alt="symbol card">
+          
+        </button>
+
+      </div>
+
+      <div class="loose-modal" id="looseModal" aria-hidden="true">
+        <div class="loose-modal-bg"></div>
+
+        <div class="loose-modal-panel">
+
+          <button class="loose-close" type="button">close</button>
+
+          <div class="loose-modal-stage">
+
+            <!-- Brand accordion leaflet -->
+            <div class="modal-content modal-brand">
+              <img
+                src="./assets/images/leaflet-brand-cover.png"
+                class="modal-brand-cover"
+                alt="brand story leaflet cover"
+              >
+
+              <img
+                src="./assets/images/leaflet-brand-front.png"
+                class="modal-brand-spread modal-brand-front"
+                alt="brand story leaflet front"
+              >
+
+              <img
+                src="./assets/images/leaflet-brand-back.png"
+                class="modal-brand-spread modal-brand-back"
+                alt="brand story leaflet back"
+              >
+            </div>
+
+            <!-- Mini book pages -->
+            <div class="modal-content modal-minibook">
+              <img
+                src="./assets/images/leaflet-minibook-01.png"
+                class="modal-page-img"
+                alt="omphi minibook page"
+              >
+            </div>
+
+            <!-- Symbol card flip -->
+            <button class="modal-content modal-symbol" type="button">
+              <span class="modal-symbol-inner">
+                <span class="modal-symbol-face">
+                  <img src="./assets/images/symbol-card-front.png" alt="symbol card front">
+                </span>
+                <span class="modal-symbol-face modal-symbol-back">
+                  <img src="./assets/images/symbol-card-back.png" alt="symbol card back">
+                </span>
+              </span>
+            </button>
+
+          </div>
+
+          <div class="loose-modal-controls">
+            <button class="modal-prev" type="button">prev</button>
+            <p class="modal-title">Brand Story Leaflet</p>
+            <button class="modal-next" type="button">next</button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="credit" id="credit">
+    <div class="credit-inner">
+
+      <div class="credit-main">
+        <img
+          src="./assets/images/logo-omphi-2.png"
+          class="credit-logo"
+          alt="omphi logo"
+        >
+        <p class="credit-exhibition">
+          Yonsei University Department of Integrated Design<br>
+          Graduation Exhibition <span>Design X</span>
+        </p>
+      </div>
+
+      <div class="credit-members">
+        <span>박효진</span>
+        <span>윤나경</span>
+        <span>조민재</span>
+        <span>한예은</span>
+      </div>
+
+      <p class="credit-copy">
+        © 2026 Omphi. All rights reserved.
+      </p>
+
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+</body>
 </html>
