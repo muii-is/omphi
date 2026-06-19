@@ -793,7 +793,7 @@ accordionLeaflets.forEach((leaflet) => {
 });
 
 // -------------------------
-// Package loose item modal
+// Package loose item modal - final stable
 // -------------------------
 const looseItems = document.querySelectorAll(".loose-item");
 const looseModal = document.getElementById("looseModal");
@@ -804,38 +804,80 @@ if (looseModal) {
   const nextBtn = looseModal.querySelector(".modal-next");
   const title = looseModal.querySelector(".modal-title");
   const modalStage = looseModal.querySelector(".loose-modal-stage");
-  const zoomBtn = looseModal.querySelector(".modal-zoom");
+
   const minibookImg = looseModal.querySelector(".modal-page-img");
   const symbolModal = looseModal.querySelector(".modal-symbol");
 
   const minibookPages = [
-    "./assets/images/leaflet-minibook-01.png",
-    "./assets/images/leaflet-minibook-02.png",
-    "./assets/images/leaflet-minibook-03.png",
-    "./assets/images/leaflet-minibook-04.png",
-    "./assets/images/leaflet-minibook-05.png",
-    "./assets/images/leaflet-minibook-06.png",
-    "./assets/images/leaflet-minibook-07.png",
-    "./assets/images/leaflet-minibook-08.png"
+    "./assets/images/minibook-01.png",
+    "./assets/images/minibook-02.png",
+    "./assets/images/minibook-03.png",
+    "./assets/images/minibook-04.png",
+    "./assets/images/minibook-05.png",
+    "./assets/images/minibook-06.png",
+    "./assets/images/minibook-07.png",
+    "./assets/images/minibook-08.png",
+    "./assets/images/minibook-09.png",
+    "./assets/images/minibook-10.png",
+    "./assets/images/minibook-11.png",
+    "./assets/images/minibook-12.png",
+    "./assets/images/minibook-13.png",
+    "./assets/images/minibook-14.png",
+    "./assets/images/minibook-15.png"
   ];
 
   let activeItem = null;
   let minibookIndex = 0;
 
+  let zoomScale = 1;
+  let zoomX = 0;
+  let zoomY = 0;
+
+  function resetWheelZoom() {
+    const targets = looseModal.querySelectorAll(".zoom-target");
+
+    targets.forEach((target) => {
+      target.classList.remove("zoom-target");
+      target.style.removeProperty("--zoom-scale");
+      target.style.removeProperty("--zoom-x");
+      target.style.removeProperty("--zoom-y");
+    });
+
+    zoomScale = 1;
+    zoomX = 0;
+    zoomY = 0;
+    looseModal.classList.remove("is-zooming");
+  }
+
   function resetModalState() {
-    looseModal.classList.remove("brand-open", "brand-back", "page-changing", "is-zooming");
-    if (symbolModal) symbolModal.classList.remove("is-flipped");
+    looseModal.classList.remove(
+      "brand-open",
+      "brand-back",
+      "page-changing",
+      "is-zooming"
+    );
+
+    if (symbolModal) {
+      symbolModal.classList.remove("is-flipped");
+    }
 
     resetWheelZoom();
   }
 
-  if (zoomBtn) {
-    zoomBtn.addEventListener("click", (event) => {
-      event.stopPropagation();
+  function setMinibookPage(index) {
+    if (!minibookImg) return;
 
-      const isZoomed = looseModal.classList.toggle("is-zoomed");
-      zoomBtn.textContent = isZoomed ? "zoom out" : "zoom";
-    });
+    minibookIndex = (index + minibookPages.length) % minibookPages.length;
+
+    looseModal.classList.add("page-changing");
+
+    setTimeout(() => {
+      minibookImg.src = minibookPages[minibookIndex];
+    }, 120);
+
+    setTimeout(() => {
+      looseModal.classList.remove("page-changing");
+    }, 360);
   }
 
   function openLooseModal(item) {
@@ -847,23 +889,27 @@ if (looseModal) {
     looseModal.setAttribute("aria-hidden", "false");
 
     if (item === "brand") {
-      title.textContent = "Brand Story Leaflet";
-      prevBtn.textContent = "close";
-      nextBtn.textContent = "open";
+      if (title) title.textContent = "Brand Story Leaflet";
+      if (prevBtn) prevBtn.textContent = "close";
+      if (nextBtn) nextBtn.textContent = "open";
     }
 
     if (item === "minibook") {
-      title.textContent = "Mini Book";
-      prevBtn.textContent = "prev";
-      nextBtn.textContent = "next";
+      if (title) title.textContent = "Mini Book";
+      if (prevBtn) prevBtn.textContent = "prev";
+      if (nextBtn) nextBtn.textContent = "next";
+
       minibookIndex = 0;
-      if (minibookImg) minibookImg.src = minibookPages[minibookIndex];
+
+      if (minibookImg) {
+        minibookImg.src = minibookPages[minibookIndex];
+      }
     }
 
     if (item === "symbol") {
-      title.textContent = "Symbol Card";
-      prevBtn.textContent = "front";
-      nextBtn.textContent = "flip";
+      if (title) title.textContent = "Symbol Card";
+      if (prevBtn) prevBtn.textContent = "front";
+      if (nextBtn) nextBtn.textContent = "flip";
     }
   }
 
@@ -898,31 +944,42 @@ if (looseModal) {
     nextBtn.addEventListener("click", (event) => {
       event.stopPropagation();
 
-      if (activeItem === "brand") {
+      const currentItem = looseModal.dataset.active;
+
+      if (currentItem === "brand") {
+        resetWheelZoom();
+
         if (!looseModal.classList.contains("brand-open")) {
           looseModal.classList.add("brand-open");
           nextBtn.textContent = "back";
-          prevBtn.textContent = "close";
+          if (prevBtn) prevBtn.textContent = "close";
         } else {
           looseModal.classList.toggle("brand-back");
-          nextBtn.textContent = looseModal.classList.contains("brand-back") ? "front" : "back";
+
+          nextBtn.textContent = looseModal.classList.contains("brand-back")
+            ? "front"
+            : "back";
         }
       }
 
-      if (activeItem === "minibook") {
+      if (currentItem === "minibook") {
+        resetWheelZoom();
+
         minibookIndex = (minibookIndex + 1) % minibookPages.length;
+
+        if (minibookImg) {
+          minibookImg.src = minibookPages[minibookIndex];
+        }
+
         looseModal.classList.add("page-changing");
 
         setTimeout(() => {
-          if (minibookImg) minibookImg.src = minibookPages[minibookIndex];
-        }, 120);
-
-        setTimeout(() => {
           looseModal.classList.remove("page-changing");
-        }, 360);
+        }, 260);
       }
 
-      if (activeItem === "symbol" && symbolModal) {
+      if (currentItem === "symbol" && symbolModal) {
+        resetWheelZoom();
         symbolModal.classList.toggle("is-flipped");
       }
     });
@@ -932,26 +989,31 @@ if (looseModal) {
     prevBtn.addEventListener("click", (event) => {
       event.stopPropagation();
 
-      if (activeItem === "brand") {
+      const currentItem = looseModal.dataset.active;
+
+      if (currentItem === "brand") {
         closeLooseModal();
       }
 
-      if (activeItem === "minibook") {
+      if (currentItem === "minibook") {
+        resetWheelZoom();
+
         minibookIndex =
           (minibookIndex - 1 + minibookPages.length) % minibookPages.length;
+
+        if (minibookImg) {
+          minibookImg.src = minibookPages[minibookIndex];
+        }
 
         looseModal.classList.add("page-changing");
 
         setTimeout(() => {
-          if (minibookImg) minibookImg.src = minibookPages[minibookIndex];
-        }, 120);
-
-        setTimeout(() => {
           looseModal.classList.remove("page-changing");
-        }, 360);
+        }, 260);
       }
 
-      if (activeItem === "symbol" && symbolModal) {
+      if (currentItem === "symbol" && symbolModal) {
+        resetWheelZoom();
         symbolModal.classList.remove("is-flipped");
       }
     });
@@ -960,74 +1022,38 @@ if (looseModal) {
   if (symbolModal) {
     symbolModal.addEventListener("click", (event) => {
       event.stopPropagation();
-      symbolModal.classList.toggle("is-flipped");
+
+      if (activeItem === "symbol") {
+        resetWheelZoom();
+        symbolModal.classList.toggle("is-flipped");
+      }
     });
   }
-
-  window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && looseModal.classList.contains("is-open")) {
-      closeLooseModal();
-    }
-  });
-
-  // -------------------------
-  // Mouse wheel zoom in modal
-  // -------------------------
-  let zoomScale = 1;
-  let zoomX = 0;
-  let zoomY = 0;
 
   function getActiveZoomTarget() {
     if (!looseModal.classList.contains("is-open")) return null;
 
     if (activeItem === "brand") {
-      resetWheelZoom();
-
       if (!looseModal.classList.contains("brand-open")) {
-        looseModal.classList.add("brand-open");
-        nextBtn.textContent = "back";
-        prevBtn.textContent = "close";
-      } else {
-        looseModal.classList.toggle("brand-back");
-        nextBtn.textContent = looseModal.classList.contains("brand-back") ? "front" : "back";
+        return looseModal.querySelector(".modal-brand-cover");
       }
+
+      if (looseModal.classList.contains("brand-back")) {
+        return looseModal.querySelector(".modal-brand-back");
+      }
+
+      return looseModal.querySelector(".modal-brand-front");
     }
 
-    if (activeItem === "brand") {
-      resetWheelZoom();
-
-      if (!looseModal.classList.contains("brand-open")) {
-        looseModal.classList.add("brand-open");
-        nextBtn.textContent = "back";
-        prevBtn.textContent = "close";
-      } else {
-        looseModal.classList.toggle("brand-back");
-        nextBtn.textContent = looseModal.classList.contains("brand-back") ? "front" : "back";
-      }
+    if (activeItem === "minibook") {
+      return looseModal.querySelector(".modal-page-img");
     }
 
-    if (activeItem === "symbol" && symbolModal) {
-      resetWheelZoom();
-      symbolModal.classList.toggle("is-flipped");
+    if (activeItem === "symbol") {
+      return looseModal.querySelector(".modal-symbol-inner");
     }
 
     return null;
-  }
-
-  function resetWheelZoom() {
-    const targets = looseModal.querySelectorAll(".zoom-target");
-
-    targets.forEach((target) => {
-      target.classList.remove("zoom-target");
-      target.style.removeProperty("--zoom-scale");
-      target.style.removeProperty("--zoom-x");
-      target.style.removeProperty("--zoom-y");
-    });
-
-    zoomScale = 1;
-    zoomX = 0;
-    zoomY = 0;
-    looseModal.classList.remove("is-zooming");
   }
 
   function applyWheelZoom(target) {
@@ -1057,17 +1083,14 @@ if (looseModal) {
         if (!target) return;
 
         const oldScale = zoomScale;
-
-        // 휠 위로 = 확대, 아래로 = 축소
         const zoomDelta = event.deltaY < 0 ? 0.12 : -0.12;
+
         zoomScale = Math.max(1, Math.min(3.2, zoomScale + zoomDelta));
 
-        // 확대된 상태에서만 살짝 팬 이동
         if (zoomScale > 1) {
           const rect = modalStage.getBoundingClientRect();
           const offsetX = event.clientX - (rect.left + rect.width / 2);
           const offsetY = event.clientY - (rect.top + rect.height / 2);
-
           const scaleDiff = zoomScale - oldScale;
 
           zoomX -= offsetX * scaleDiff * 0.28;
@@ -1082,4 +1105,252 @@ if (looseModal) {
       { passive: false }
     );
   }
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && looseModal.classList.contains("is-open")) {
+      closeLooseModal();
+    }
+  });
+}
+
+// -------------------------
+// MINIBOOK ABSOLUTE FIX
+// document capture로 next/prev 클릭을 강제로 가로챔
+// -------------------------
+(() => {
+  const modal = document.getElementById("looseModal");
+  if (!modal) return;
+
+  const img = modal.querySelector(".modal-page-img");
+  const title = modal.querySelector(".modal-title");
+  const minibookButton = document.querySelector('.loose-item[data-item="minibook"]');
+
+  if (!img || !minibookButton) {
+    console.log("MINIBOOK FIX: img or button missing");
+    return;
+  }
+
+  const pages = [
+    "./assets/images/minibook-01.png",
+    "./assets/images/minibook-02.png",
+    "./assets/images/minibook-03.png",
+    "./assets/images/minibook-04.png",
+    "./assets/images/minibook-05.png",
+    "./assets/images/minibook-06.png",
+    "./assets/images/minibook-07.png",
+    "./assets/images/minibook-08.png",
+    "./assets/images/minibook-09.png",
+    "./assets/images/minibook-10.png",
+    "./assets/images/minibook-11.png",
+    "./assets/images/minibook-12.png",
+    "./assets/images/minibook-13.png",
+    "./assets/images/minibook-14.png",
+    "./assets/images/minibook-15.png"
+  ];
+
+  let index = 0;
+
+  function isMinibookMode() {
+    return modal.classList.contains("is-open") && modal.dataset.active === "minibook";
+  }
+
+  function renderPage(nextIndex) {
+    index = (nextIndex + pages.length) % pages.length;
+
+    console.log("MINIBOOK PAGE:", index + 1, pages[index]);
+
+    img.style.opacity = "0.35";
+    img.style.transform = "rotateY(-12deg) translateX(14px) scale(0.96)";
+
+    setTimeout(() => {
+      img.src = pages[index];
+      if (title) title.textContent = `Mini Book ${index + 1} / ${pages.length}`;
+    }, 100);
+
+    setTimeout(() => {
+      img.style.opacity = "1";
+      img.style.transform = "none";
+    }, 260);
+  }
+
+  minibookButton.addEventListener(
+    "click",
+    () => {
+      index = 0;
+      modal.dataset.active = "minibook";
+      img.src = pages[0];
+
+      if (title) title.textContent = `Mini Book 1 / ${pages.length}`;
+
+      console.log("MINIBOOK OPENED");
+    },
+    true
+  );
+
+  document.addEventListener(
+    "click",
+    (event) => {
+      if (!isMinibookMode()) return;
+
+      const nextButton = event.target.closest(".modal-next");
+      const prevButton = event.target.closest(".modal-prev");
+
+      if (!nextButton && !prevButton) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      if (nextButton) {
+        renderPage(index + 1);
+      }
+
+      if (prevButton) {
+        renderPage(index - 1);
+      }
+    },
+    true
+  );
+})();
+
+// -------------------------
+// Omphi Photo Booth
+// -------------------------
+const boothVideo = document.getElementById("boothVideo");
+const boothCanvas = document.getElementById("boothCanvas");
+const boothPreview = document.querySelector(".booth-preview");
+
+const startCameraBtn = document.getElementById("startCamera");
+const takePhotoBtn = document.getElementById("takePhoto");
+const retakePhotoBtn = document.getElementById("retakePhoto");
+const downloadPhoto = document.getElementById("downloadPhoto");
+
+let boothStream = null;
+
+const boothLogoImg = new Image();
+boothLogoImg.src = "./assets/images/logo-omphi.png";
+
+const boothStickerImg = new Image();
+boothStickerImg.src = "./assets/images/pet-click-blue.png";
+
+async function startBoothCamera() {
+  if (!boothVideo) return;
+
+  try {
+    boothStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: "user",
+        width: { ideal: 1280 },
+        height: { ideal: 960 }
+      },
+      audio: false
+    });
+
+    boothVideo.srcObject = boothStream;
+
+    if (boothPreview) {
+      boothPreview.classList.remove("is-captured");
+    }
+
+    if (downloadPhoto) {
+      downloadPhoto.classList.remove("is-ready");
+      downloadPhoto.removeAttribute("href");
+    }
+  } catch (error) {
+    alert("카메라 권한을 허용해야 포토부스를 사용할 수 있어요!");
+    console.error("Camera error:", error);
+  }
+}
+
+function takeBoothPhoto() {
+  if (!boothVideo || !boothCanvas || !boothPreview) return;
+
+  const width = boothVideo.videoWidth || 1280;
+  const height = boothVideo.videoHeight || 960;
+
+  boothCanvas.width = width;
+  boothCanvas.height = height;
+
+  const ctx = boothCanvas.getContext("2d");
+
+  // 카메라 이미지
+  ctx.drawImage(boothVideo, 0, 0, width, height);
+
+  // omphi 프레임 느낌: 흰 테두리
+  const margin = Math.round(width * 0.04);
+  const radius = Math.round(width * 0.035);
+
+  ctx.lineWidth = Math.round(width * 0.012);
+  ctx.strokeStyle = "rgba(251, 246, 233, 0.95)";
+
+  roundRect(ctx, margin, margin, width - margin * 2, height - margin * 2, radius);
+  ctx.stroke();
+
+  // Photo booth overlay assets
+  const boothLogoImg = new Image();
+  boothLogoImg.src = "./assets/images/logo-omphi.png";
+
+  const boothSymbolImgs = [
+    "./assets/images/symbol_web-01.png",
+    "./assets/images/symbol_web-02.png",
+    "./assets/images/symbol_web-03.png",
+    "./assets/images/symbol_web-04.png",
+    "./assets/images/symbol_web-05.png"
+  ].map((src) => {
+    const img = new Image();
+    img.src = src;
+    return img;
+  });
+
+  boothPreview.classList.add("is-captured");
+
+  const imageUrl = boothCanvas.toDataURL("image/png");
+
+  if (downloadPhoto) {
+    downloadPhoto.href = imageUrl;
+    downloadPhoto.classList.add("is-ready");
+  }
+}
+
+function roundRect(ctx, x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+if (startCameraBtn) {
+  startCameraBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    startBoothCamera();
+  });
+}
+
+if (takePhotoBtn) {
+  takePhotoBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    takeBoothPhoto();
+  });
+}
+
+if (retakePhotoBtn) {
+  retakePhotoBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+
+    if (boothPreview) {
+      boothPreview.classList.remove("is-captured");
+    }
+
+    if (downloadPhoto) {
+      downloadPhoto.classList.remove("is-ready");
+      downloadPhoto.removeAttribute("href");
+    }
+  });
 }
