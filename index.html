@@ -25,6 +25,7 @@
       <button data-target="pet">Pet</button>
       <button data-target="hub">Hub</button>
       <button data-target="package">Package</button>
+      <button data-target="photo-booth">PhotoBooth</button>
     </div>
 
     <img src="./assets/images/hero-bg-motif.png" class="motif-bg" alt="">
@@ -957,8 +958,7 @@
         </button>
 
         <button class="loose-item loose-minibook" type="button" data-item="minibook">
-          <img src="./assets/images/leaflet-minibook-cover.png" alt="omphi minibook">
-          
+          <img src="./assets/images/minibook-01.png" alt="omphi minibook">
         </button>
 
         <button class="loose-item loose-symbol" type="button" data-item="symbol">
@@ -1001,7 +1001,7 @@
             <!-- Mini book pages -->
             <div class="modal-content modal-minibook">
               <img
-                src="./assets/images/leaflet-minibook-01.png"
+                src="./assets/images/minibook-01.png"
                 class="modal-page-img"
                 alt="omphi minibook page"
               >
@@ -1028,6 +1028,50 @@
           </div>
 
         </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================
+    PHOTO BOOTH
+  ========================== -->
+  <section class="section photo-booth" id="photo-booth">
+    <div class="photo-booth-inner">
+
+      <div class="major-title-head is-blue">
+        <p class="major-title-label">Omphi Photo Booth</p>
+
+        <p class="major-title-main">
+          오늘의 마음을<br>
+          옴피와 함께 남겨요
+        </p>
+
+        <p class="major-title-desc">
+          전시를 둘러본 뒤, 오늘의 순간을 남겨보세요.<br>
+          촬영한 사진은 다운로드 눌러주시고 가면 팀원들이 수합해서 보내드릴게요!
+        </p>
+      </div>
+
+      <div class="booth-camera-card">
+
+        <div class="booth-preview">
+          <video id="boothVideo" autoplay playsinline></video>
+          <canvas id="boothCanvas"></canvas>
+
+          <div class="booth-frame">
+            <img src="./assets/images/logo-omphi.png" alt="omphi logo">
+            <p>말랑한 마음을 남겨요!</p>
+          </div>
+        </div>
+
+        <div class="booth-controls">
+          <button type="button" id="startCamera">camera on</button>
+          <button type="button" id="takePhoto">take photo</button>
+          <button type="button" id="retakePhoto">retake</button>
+          <a id="downloadPhoto" download="omphi-photo.png">download</a>
+        </div>
+
       </div>
 
     </div>
@@ -1062,6 +1106,6 @@
     </div>
   </footer>
 
-  <script src="./script.js"></script>
+  <script src="./script.js?v=4"></script>
 </body>
 </html>
