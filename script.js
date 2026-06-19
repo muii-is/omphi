@@ -1,1356 +1,4433 @@
-const cursor = document.querySelector('.custom-cursor');
-const motifs = document.querySelectorAll('.motif');
-const smallMotifs = document.querySelectorAll(
-  '.motif:not(.ring-big-left):not(.ring-big-right)'
-);
+@font-face {
+  font-family: "OmphiBody";
+  src: url("./assets/fonts/MinSans-Light.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
-// -------------------------
-// 커서
-// -------------------------
-let mouseX = window.innerWidth / 2;
-let mouseY = window.innerHeight / 2;
+@font-face {
+  font-family: "OmphiTitle";
+  src: url("./assets/fonts/Dongle-Bold.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
-window.addEventListener('mousemove', (event) => {
-  mouseX = event.clientX;
-  mouseY = event.clientY;
+@font-face {
+  font-family: "OmphiEng";
+  src: url("./assets/fonts/Outfit-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 
-  if (cursor) {
-    cursor.style.left = `${mouseX}px`;
-    cursor.style.top = `${mouseY}px`;
+:root {
+  --omphi-blue: #72ccdb;
+  --omphi-pink: #ff87b3;
+  --omphi-cream: #fbf6e9;
+  --omphi-brown: #503e2e;
+
+  --bg-main: var(--omphi-cream);
+  --text-main: var(--omphi-brown);
+  --point-main: var(--omphi-pink);
+  --point-sub: var(--omphi-blue);
+}
+
+/* =========================
+   RESET / BASE
+========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "OmphiBody", sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  cursor: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+button {
+  font-family: "OmphiBody", sans-serif;
+}
+
+.section {
+  position: relative;
+  min-height: 100vh;
+  padding: 90px 6vw;
+}
+
+/* =========================
+   FONT SYSTEM
+========================= */
+
+h1,
+h2,
+h3 {
+  font-family: "OmphiTitle", sans-serif;
+  font-weight: 400;
+  color: var(--text-main);
+}
+
+p,
+span,
+strong,
+button,
+.section-desc,
+.info-card {
+  font-family: "OmphiBody", sans-serif;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+  padding: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background-image: url("./assets/images/hero-bg-clean.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.motif-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.96;
+  transform-origin: center center;
+  animation: motifBgBreath 8s ease-in-out infinite;
+}
+
+.pet-wrap {
+  position: absolute;
+  z-index: 5;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.pet-left-wrap {
+  width: 48vw;
+  left: -3vw;
+  bottom: -8vh;
+  animation: petFloatLeft 6s ease-in-out infinite;
+}
+
+.pet-right-wrap {
+  width: 46vw;
+  right: -3vw;
+  top: -3vh;
+  animation: petFloatRight 6.5s ease-in-out infinite;
+}
+
+.hero-pet {
+  width: 100%;
+  display: block;
+  position: relative;
+  z-index: 3;
+}
+
+.pet-pupil {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  will-change: transform;
+  transform: translate(0, 0);
+}
+
+.pet-glow {
+  position: absolute;
+  z-index: 1;
+  border-radius: 999px;
+  filter: blur(95px);
+  opacity: 0.34;
+  pointer-events: none;
+  animation: glowPulse 5s ease-in-out infinite;
+}
+
+.pet-glow.soft {
+  filter: blur(150px);
+  opacity: 0.16;
+}
+
+.pet-glow-cream {
+  width: 72%;
+  height: 72%;
+  left: 10%;
+  top: 17%;
+  background: rgba(255, 246, 220, 0.72);
+}
+
+.hero-logo {
+  position: absolute;
+  z-index: 7;
+  width: 60vw;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: logoBreath 4.5s ease-in-out infinite;
+  pointer-events: none;
+  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.2));
+}
+
+/* =========================
+   FLOATING WIDGET / CURSOR
+========================= */
+
+.floating-widget {
+  position: fixed;
+  right: 24px;
+  top: 24px;
+  z-index: 50;
+  display: flex;
+  gap: 8px;
+}
+
+.floating-widget button {
+  border: 1px solid rgba(80, 62, 46, 0.35);
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(8px);
+  color: var(--text-main);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: none;
+}
+
+.floating-widget button:hover {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.custom-cursor {
+  width: 70px;
+  height: 70px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  background-image: url("./assets/icons/cursor-omphi.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 4px 10px rgba(80, 62, 46, 0.18));
+}
+
+.custom-cursor.clicking {
+  transform: translate(-50%, -50%) scale(0.84);
+}
+
+.sprinkle {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0;
+  animation: sprinkleFloatDown 4200ms linear forwards;
+}
+
+.scroll-hint {
+  display: none;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes motifBgBreath {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 0.92;
   }
-});
 
-window.addEventListener('mousedown', () => {
-  if (cursor) cursor.classList.add('clicking');
-});
-
-window.addEventListener('mouseup', () => {
-  if (cursor) cursor.classList.remove('clicking');
-});
-
-// -------------------------
-// 작은 모티프 자유 유영
-// -------------------------
-const floaters = [];
-
-smallMotifs.forEach((motif) => {
-  const rect = motif.getBoundingClientRect();
-
-  // 기존 CSS 위치 무시하고 JS가 직접 위치 잡음
-  motif.style.left = '0px';
-  motif.style.top = '0px';
-  motif.style.right = 'auto';
-  motif.style.bottom = 'auto';
-
-  floaters.push({
-    el: motif,
-    baseX: Math.random() * window.innerWidth,
-    baseY: Math.random() * window.innerHeight,
-    driftX: (Math.random() - 0.5) * 0.08,
-    driftY: (Math.random() - 0.5) * 0.06,
-    ampX: 18 + Math.random() * 34,
-    ampY: 14 + Math.random() * 28,
-    freqX: 0.00035 + Math.random() * 0.00035,
-    freqY: 0.00028 + Math.random() * 0.00032,
-    phaseX: Math.random() * Math.PI * 2,
-    phaseY: Math.random() * Math.PI * 2,
-    attractX: 0,
-    attractY: 0,
-    width: rect.width || 40,
-    height: rect.height || 40
-  });
-});
-
-function animateFloaters(time) {
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-
-  floaters.forEach((item) => {
-    // 아주 느린 베이스 드리프트
-    item.baseX += item.driftX;
-    item.baseY += item.driftY;
-
-    // 화면 밖으로 나가면 반대쪽에서 다시 등장
-    if (item.baseX < -120) item.baseX = w + 120;
-    if (item.baseX > w + 120) item.baseX = -120;
-    if (item.baseY < -120) item.baseY = h + 120;
-    if (item.baseY > h + 120) item.baseY = -120;
-
-    // 유영하듯 흔들림
-    const swimX = Math.sin(time * item.freqX + item.phaseX) * item.ampX;
-    const swimY = Math.cos(time * item.freqY + item.phaseY) * item.ampY;
-
-    // 커서 가까우면 살짝 끌려옴
-    const currentX = item.baseX + swimX;
-    const currentY = item.baseY + swimY;
-
-    const dx = mouseX - currentX;
-    const dy = mouseY - currentY;
-    const distance = Math.hypot(dx, dy);
-
-    const attractRange = 170;
-    const attractStrength = 0.06;
-
-    let targetAttractX = 0;
-    let targetAttractY = 0;
-
-    if (distance < attractRange) {
-      targetAttractX = dx * attractStrength;
-      targetAttractY = dy * attractStrength;
-    }
-
-    item.attractX += (targetAttractX - item.attractX) * 0.03;
-    item.attractY += (targetAttractY - item.attractY) * 0.03;
-
-    item.el.style.transform = `translate3d(
-      ${currentX + item.attractX}px,
-      ${currentY + item.attractY}px,
-      0
-    )`;
-  });
-
-  requestAnimationFrame(animateFloaters);
-}
-
-requestAnimationFrame(animateFloaters);
-
-// -------------------------
-// sprinkle - 작고 천천히 일정하게 떨어짐
-// -------------------------
-window.addEventListener('click', (event) => {
-  createSoftSprinkles(event.clientX, event.clientY);
-});
-
-function createSoftSprinkles(x, y) {
-  const count = 12;
-
-  const colors = [
-    '#fff7d8',
-    '#ffffff',
-    '#ffd9ec',
-    '#ffc3df',
-    '#c8f6ff',
-    '#8fe7f2'
-  ];
-
-  for (let i = 0; i < count; i++) {
-    const sprinkle = document.createElement('span');
-    sprinkle.classList.add('sprinkle');
-
-    const size = 3 + Math.random() * 3.5;
-
-    const startX = (Math.random() - 0.5) * 10;
-    const startY = (Math.random() - 0.5) * 6;
-
-    // 처음에 위로 살짝 팝 되는 위치
-    const popX = (Math.random() - 0.5) * 42;
-    const popY = -15 - Math.random() * 25;
-
-    // 이후 천천히 떨어지는 위치
-    const endX = popX + (Math.random() - 0.5) * 38;
-    const endY = 75 + Math.random() * 95;
-
-    const delay = Math.random() * 220;
-    const color = colors[Math.floor(Math.random() * colors.length)];
-
-    sprinkle.style.left = `${x}px`;
-    sprinkle.style.top = `${y}px`;
-    sprinkle.style.width = `${size}px`;
-    sprinkle.style.height = `${size}px`;
-    sprinkle.style.background = color;
-    sprinkle.style.animationDelay = `${delay}ms`;
-
-    sprinkle.style.setProperty('--start-x', `${startX}px`);
-    sprinkle.style.setProperty('--start-y', `${startY}px`);
-    sprinkle.style.setProperty('--pop-x', `${popX}px`);
-    sprinkle.style.setProperty('--pop-y', `${popY}px`);
-    sprinkle.style.setProperty('--end-x', `${endX}px`);
-    sprinkle.style.setProperty('--end-y', `${endY}px`);
-
-    document.body.appendChild(sprinkle);
-
-    setTimeout(() => {
-      sprinkle.remove();
-    }, 3400);
-  }
-}
-
-// -------------------------
-// 위젯 스크롤
-// -------------------------
-document.querySelectorAll('.floating-widget button').forEach((button) => {
-  button.addEventListener('click', (event) => {
-    event.stopPropagation();
-
-    const targetId = button.dataset.target;
-    const target = document.getElementById(targetId);
-
-    if (target) {
-      target.scrollIntoView({
-        behavior: 'smooth'
-      });
-    }
-  });
-});
-
-const pets = document.querySelectorAll(".pet-wrap");
-
-const mouse = {
-  x: window.innerWidth / 2,
-  y: window.innerHeight / 2
-};
-
-window.addEventListener("mousemove", (e) => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
-});
-
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function animatePupils() {
-  pets.forEach((pet) => {
-    const pupil = pet.querySelector(".pet-pupil");
-
-    if (!pupil) return;
-
-    const rect = pet.getBoundingClientRect();
-
-    const petCenterX = rect.left + rect.width / 2;
-    const petCenterY = rect.top + rect.height / 2;
-
-    const dx = mouse.x - petCenterX;
-    const dy = mouse.y - petCenterY;
-
-    const nx = dx / (window.innerWidth / 2);
-    const ny = dy / (window.innerHeight / 2);
-
-    const maxX = parseFloat(pet.dataset.maxX || 3.8);
-    const maxY = parseFloat(pet.dataset.maxY || 1.4);
-
-    const targetX = clamp(nx * maxX, -maxX, maxX);
-    const targetY = clamp(ny * maxY, -maxY, maxY);
-
-    let currentX = parseFloat(pupil.dataset.currentX || 0);
-    let currentY = parseFloat(pupil.dataset.currentY || 0);
-
-    currentX += (targetX - currentX) * 0.12;
-    currentY += (targetY - currentY) * 0.12;
-
-    pupil.dataset.currentX = currentX;
-    pupil.dataset.currentY = currentY;
-
-    const offsetX = parseFloat(pet.dataset.offsetX || 0);
-    const offsetY = parseFloat(pet.dataset.offsetY || 0);
-
-    pupil.style.transform = `translate(${currentX + offsetX}px, ${currentY + offsetY}px)`;
-  });
-
-  requestAnimationFrame(animatePupils);
-}
-
-animatePupils();
-
-const openPetInline = document.getElementById("openPetInline");
-const backPetInline = document.getElementById("backPetInline");
-const petClickArea = document.getElementById("petClickArea");
-
-if (openPetInline && backPetInline && petClickArea) {
-  openPetInline.addEventListener("click", (event) => {
-    event.stopPropagation();
-    petClickArea.classList.add("active");
-  });
-
-  backPetInline.addEventListener("click", (event) => {
-    event.stopPropagation();
-    petClickArea.classList.remove("active");
-  });
-}
-
-// -------------------------
-// Expression interaction
-// -------------------------
-const expressionItems = document.querySelectorAll(".expression-item");
-
-expressionItems.forEach((item) => {
-  item.addEventListener("mouseenter", () => {
-    item.classList.add("is-active");
-  });
-
-  item.addEventListener("mouseleave", () => {
-    item.classList.remove("is-active");
-  });
-});
-
-// -------------------------
-// Expression background symbols
-// 골고루 퍼지는 버전
-// -------------------------
-const expressionSymbols = document.querySelector(".expression-symbols");
-
-if (expressionSymbols) {
-  const symbolImages = [
-    "./assets/images/symbol_web-01.png",
-    "./assets/images/symbol_web-02.png",
-    "./assets/images/symbol_web-03.png",
-    "./assets/images/symbol_web-04.png",
-    "./assets/images/symbol_web-05.png"
-  ];
-
-  // 가로 x 세로 칸 수
-  const cols = 8;
-  const rows = 4;
-
-  // 총 개수 = cols * rows
-  const symbolCount = cols * rows;
-
-  for (let i = 0; i < symbolCount; i++) {
-    const img = document.createElement("img");
-    const randomSrc = symbolImages[Math.floor(Math.random() * symbolImages.length)];
-
-    img.src = randomSrc;
-    img.alt = "";
-    img.className = "expr-symbol";
-
-    const col = i % cols;
-    const row = Math.floor(i / cols);
-
-    // 각 칸의 중심 위치
-    const baseLeft = ((col + 0.5) / cols) * 100;
-    const baseTop = ((row + 0.5) / rows) * 100;
-
-    // 칸 안에서만 살짝 랜덤 이동
-    const jitterX = -4 + Math.random() * 8;
-    const jitterY = -5 + Math.random() * 10;
-
-    const left = baseLeft + jitterX;
-    const top = baseTop + jitterY;
-
-    // 크기 다양하게
-    const size = 24 + Math.random() * 170;
-
-    // 투명도
-    const opacity = 0.16 + Math.random() * 0.24;
-
-    const duration = 6 + Math.random() * 8;
-    const delay = -Math.random() * 8;
-    const floatY = -10 - Math.random() * 30;
-    const rotateStart = -8 + Math.random() * 16;
-    const rotateEnd = rotateStart + (-8 + Math.random() * 16);
-
-    img.style.width = `${size}px`;
-    img.style.left = `${left}%`;
-    img.style.top = `${top}%`;
-    img.style.opacity = opacity.toFixed(2);
-    img.style.animationDuration = `${duration}s`;
-    img.style.animationDelay = `${delay}s`;
-
-    img.style.setProperty("--float-y", `${floatY}px`);
-    img.style.setProperty("--rotate-start", `${rotateStart}deg`);
-    img.style.setProperty("--rotate-end", `${rotateEnd}deg`);
-
-    expressionSymbols.appendChild(img);
+  50% {
+    transform: scale(1.012) translateY(-5px);
+    opacity: 1;
   }
 }
 
-// -------------------------
-// Docking interaction
-// -------------------------
-const dockStage = document.getElementById("dockStage");
-const dockHub = document.getElementById("dockHub");
-const dockPets = document.querySelectorAll(".dock-pet");
-const dockChoicePanel = document.getElementById("dockChoicePanel");
-const dockOwnerLabel = document.getElementById("dockOwnerLabel");
-const dockMakeSymbol = document.getElementById("dockMakeSymbol");
-const dockResetSymbol = document.getElementById("dockResetSymbol");
-const hubSymbolStage = document.getElementById("hubSymbolStage");
-
-
-// topic 06~15 / feeling 16~25
-const topicSymbolMap = {
-  career: 6,        // 진로
-  love: 7,          // 연애
-  health: 8,        // 건강
-  money: 9,         // 돈
-  future: 10,       // 미래
-  dream: 11,        // 꿈
-  independence: 12, // 독립
-  family: 13,       // 가족
-  study: 14,        // 공부
-  work: 15          // 일
-};
-
-const feelingSymbolMap = {
-  anxiety: 16,    // 불안
-  longing: 17,    // 그리움
-  warmth: 18,     // 따뜻함
-  waiting: 19,    // 기다림
-  loneliness: 20, // 외로움
-  joy: 21,        // 기쁨
-  sadness: 22,    // 슬픔
-  stuffy: 23,     // 답답함
-  thanks: 24,     // 고마움
-  flutter: 25     // 설렘
-};
-
-const dockData = {
-  daughter: {
-    docked: false,
-    topic: null,
-    feel: null
-  },
-  mom: {
-    docked: false,
-    topic: null,
-    feel: null
-  },
-  currentOwner: null
-};
-
-const createdSymbolIds = {
-  daughter: new Set(),
-  mom: new Set()
-};
-
-// -------------------------
-// Hub symbol creation
-// -------------------------
-const symbolLayout = [
-  { id: 6,  x: 28, y: 28, size: 82 },
-  { id: 7,  x: 50, y: 24, size: 88 },
-  { id: 8,  x: 72, y: 30, size: 82 },
-  { id: 9,  x: 32, y: 48, size: 86 },
-  { id: 10, x: 58, y: 46, size: 88 },
-  { id: 11, x: 76, y: 50, size: 82 },
-  { id: 12, x: 26, y: 70, size: 82 },
-  { id: 13, x: 46, y: 68, size: 86 },
-  { id: 14, x: 68, y: 70, size: 88 },
-  { id: 15, x: 82, y: 72, size: 78 },
-
-  { id: 16, x: 38, y: 34, size: 76 },
-  { id: 17, x: 62, y: 32, size: 76 },
-  { id: 18, x: 50, y: 55, size: 84 },
-  { id: 19, x: 30, y: 58, size: 78 },
-  { id: 20, x: 72, y: 58, size: 78 },
-  { id: 21, x: 40, y: 80, size: 82 },
-  { id: 22, x: 62, y: 82, size: 82 },
-  { id: 23, x: 22, y: 42, size: 74 },
-  { id: 24, x: 82, y: 42, size: 74 },
-  { id: 25, x: 50, y: 76, size: 78 }
-];
-
-function createHubSymbol({ id, x, y, size }) {
-  const symbolId = String(id).padStart(2, "0");
-
-  const el = document.createElement("div");
-  el.className = "hub-symbol state-idle";
-  el.dataset.id = id;
-  el.style.left = `${x}%`;
-  el.style.top = `${y}%`;
-  el.style.width = `${size}px`;
-
-  const floatY = `${5 + Math.random() * 8}px`;
-  const dur = `${4.8 + Math.random() * 2.2}s`;
-  const delay = `-${Math.random() * 2.8}s`;
-
-  el.innerHTML = `
-    <div class="hub-symbol-inner" style="--float-y:${floatY}; --dur:${dur}; --delay:${delay};">
-      <span
-        class="hub-symbol-layer hub-symbol-bone"
-        style="--mask:url('./assets/images/symbol-bone/symbol-bone-${symbolId}.svg');"
-      ></span>
-
-      <span
-        class="hub-symbol-layer hub-symbol-core"
-        style="--mask:url('./assets/images/symbol-core/symbol-core-${symbolId}.svg');"
-      ></span>
-    </div>
-  `;
-
-  return el;
-}
-
-function buildHubSymbols() {
-  if (!hubSymbolStage) return;
-
-  hubSymbolStage.innerHTML = "";
-
-  symbolLayout.forEach((item) => {
-    hubSymbolStage.appendChild(createHubSymbol(item));
-  });
-}
-
-function getOwnerSymbolIds(owner) {
-  const data = dockData[owner];
-  const ids = [];
-
-  if (data.topic && topicSymbolMap[data.topic]) {
-    ids.push(topicSymbolMap[data.topic]);
+@keyframes petFloatLeft {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-0.8deg);
   }
 
-  if (data.feel && feelingSymbolMap[data.feel]) {
-    ids.push(feelingSymbolMap[data.feel]);
+  50% {
+    transform: translate3d(0, -12px, 0) rotate(0.4deg);
   }
-
-  return ids;
 }
 
-function applyDockState(daughterIds = [], momIds = []) {
-  if (!hubSymbolStage) return;
+@keyframes petFloatRight {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0.8deg);
+  }
 
-  const allSymbols = hubSymbolStage.querySelectorAll(".hub-symbol");
+  50% {
+    transform: translate3d(0, 14px, 0) rotate(-0.4deg);
+  }
+}
 
-  allSymbols.forEach((el) => {
-    const id = Number(el.dataset.id);
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.24;
+    transform: scale(0.98);
+  }
 
-    const isDaughter = daughterIds.includes(id);
-    const isMom = momIds.includes(id);
+  50% {
+    opacity: 0.42;
+    transform: scale(1.08);
+  }
+}
 
-    el.classList.remove(
-      "state-idle",
-      "state-daughter",
-      "state-mom",
-      "state-shared"
+@keyframes logoBreath {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    transform: translate(-50%, -52%) scale(1.025);
+  }
+}
+
+@keyframes sprinkleFloatDown {
+  0% {
+    opacity: 0;
+    transform: translate(
+      calc(-50% + var(--start-x)),
+      calc(-50% + var(--start-y))
+    ) scale(0.4);
+  }
+
+  8% {
+    opacity: 0.85;
+    transform: translate(
+      calc(-50% + var(--pop-x)),
+      calc(-50% + var(--pop-y))
+    ) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(
+      calc(-50% + var(--end-x)),
+      calc(-50% + var(--end-y))
+    ) scale(0.75);
+  }
+}
+
+/* =========================
+   COMMON SECTION
+========================= */
+
+.section-inner {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+}
+
+.section-inner.narrow {
+  width: min(760px, 100%);
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 56px;
+  align-items: center;
+}
+
+h2 {
+  margin: 0 0 28px;
+  font-size: clamp(56px, 8vw, 108px);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+}
+
+h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+p {
+  font-size: 18px;
+  line-height: 1.9;
+  letter-spacing: -0.02em;
+}
+
+/* =========================
+   STORY SECTION
+========================= */
+
+.story {
+  background: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+  padding: 300px 6vw 120px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.story .section-inner {
+  width: min(760px, 100%);
+  margin: 0 auto;
+}
+
+.story-brand {
+  text-align: center;
+  margin-bottom: 90px;
+  transform: translateY(-10px);
+}
+
+.story .story-kicker,
+.story .story-kicker span,
+.story .story-subtitle {
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 0.6;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.story .story-kicker {
+  color: var(--text-main);
+  margin-bottom: 24px;
+}
+
+.story .story-kicker span {
+  color: var(--point-main);
+}
+
+.story .story-subtitle {
+  color: var(--text-main);
+  margin-bottom: 40px;
+}
+
+.story-logo {
+  width: 210px;
+  display: block;
+  margin: 0 auto;
+}
+
+.story .section-inner > p {
+  font-family: "OmphiBody", sans-serif;
+  font-size: 14px;
+  line-height: 2.05;
+  letter-spacing: -0.05em;
+  color: rgba(80, 62, 46, 0.92);
+  margin: 0 0 32px;
+  word-break: keep-all;
+  transform: translateX(120px);
+}
+
+.story .section-inner > p:last-child {
+  margin-bottom: 0;
+}
+
+.story-ending {
+  text-align: center;
+  margin-top: 90px;
+}
+
+/* =========================
+   STORY SECTION REFINEMENT
+========================= */
+
+.story {
+  padding: 220px 6vw 140px;
+  align-items: flex-start;
+}
+
+.story-brand {
+  margin-bottom: 72px;
+  transform: none;
+}
+
+.story .story-kicker,
+.story .story-kicker span {
+  font-size: clamp(32px, 5vw, 74px);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin-bottom: 18px;
+}
+
+.story .story-subtitle {
+  font-size: clamp(32px, 4vw, 58px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin-bottom: 0;
+}
+
+.story .section-inner {
+  width: min(720px, 100%);
+}
+
+.story .section-inner > p {
+  transform: none;
+  width: min(620px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+
+  font-size: 15px;
+  line-height: 2.05;
+  letter-spacing: -0.04em;
+  text-align: center;
+  word-break: keep-all;
+}
+
+/* =========================
+   VIDEO
+========================= */
+
+.video-section {
+  background: var(--bg-main);
+}
+
+.film-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 32px;
+  overflow: hidden;
+}
+
+.film-wrap iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* =========================
+   LOVE COPY
+========================= */
+
+.love-copy {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 80px;
+  overflow: hidden;
+}
+
+.love-copy p {
+  position: relative;
+  z-index: 2;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 54px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.love-copy p span {
+  font-family: "OmphiTitle", sans-serif;
+  color: var(--point-main);
+}
+
+.love-motif {
+  position: absolute;
+  z-index: 1;
+  width: 100vw;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* =========================
+   PET GUIDE SECTION
+========================= */
+
+.product {
+  background: var(--bg-main);
+  min-height: 100vh;
+  padding: 70px 3vw 80px;
+  overflow: hidden;
+}
+
+/* 전체 Pet 섹션 */
+.pet-guide-layout {
+  width: min(1380px, 100%);
+  min-height: calc(100vh - 150px);
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 상단: Omphi Pet device + 작은 PNG */
+.pet-top-wrap {
+  width: min(720px, 58vw);
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  margin-bottom: 82px;
+  pointer-events: none;
+}
+
+/* 왼쪽 상단 글씨 */
+.pet-device-label {
+  margin: 0;
+  font-family: "OmphiTitle", sans-serif;
+  transform: translate(-190px, 300px);
+  font-size: 50px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+/* 오른쪽 상단 PNG */
+.pet-guide-title-img {
+  width: 380px;
+  transform: translate(290px, 130px);
+  height: auto;
+  display: block;
+}
+
+/* 메인: 좌측 설명 + 가운데 제품 + 우측 설명 */
+.pet-main-wrap {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(360px, 470px) minmax(280px, 1fr);
+  column-gap: clamp(40px, 6vw, 90px);
+  align-items: start;
+}
+
+/* 가운데 제품 영역 */
+.pet-center-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+}
+
+/* 클릭 PNG / GLB 공통 박스 */
+.pet-click-area {
+  position: relative;
+  width: min(520px, 34vw);
+  height: min(520px, 34vw);
+  display: grid;
+  place-items: center;
+  background: transparent;
+  overflow: visible;
+}
+
+/* click here */
+.pet-click-button {
+  position: absolute;
+  z-index: 5;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 0;
+  background: transparent;
+  color: var(--text-main);
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  cursor: none;
+}
+
+/* 기본 PNG */
+.pet-click-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+
+/* GLB */
+.pet-model-viewer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+
+  display: block;
+  background: transparent;
+  --poster-color: transparent;
+
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+
+  filter:
+
+    brightness(0.92)
+    contrast(1.1)
+    saturate(1.8)
+    drop-shadow(0 18px 30px rgba(90, 110, 125, 0.18))
+    drop-shadow(0 6px 16px rgba(170, 210, 230, 0.12));
+
+  transition: opacity 0.45s ease;
+}
+
+/* active 상태 */
+.pet-click-area.active .pet-click-button,
+.pet-click-area.active .pet-click-image {
+  display: none;
+}
+
+.pet-click-area.active .pet-model-viewer {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* back button */
+.pet-back-button {
+  display: none;
+  position: absolute;
+  z-index: 6;
+  right: -8px;
+  top: -8px;
+  border: 1px solid rgba(80, 62, 46, 0.2);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--text-main);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 22px;
+  line-height: 1;
+  cursor: none;
+}
+
+.pet-click-area.active .pet-back-button {
+  display: block;
+}
+
+/* 양쪽 설명 */
+.pet-side-copy {
+  max-width: 370px;
+  color: var(--text-main);
+  padding-top: 20px;
+}
+
+.pet-side-left {
+  justify-self: end;
+  text-align: right;
+}
+
+.pet-side-right {
+  justify-self: start;
+  text-align: left;
+}
+
+.pet-side-copy h3 {
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin: 0 0 10px;
+  color: var(--text-main);
+}
+
+.copy-lead {
+  font-size: 17px;
+  line-height: 1.7;
+  letter-spacing: -0.02em;
+  margin: 0 0 28px;
+  color: rgba(80, 62, 46, 0.92);
+}
+
+.copy-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+}
+
+.copy-list li {
+  margin-bottom: 22px;
+}
+
+.copy-list strong {
+  display: block;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 6px;
+  color: var(--point-sub);
+}
+
+.copy-list span {
+  display: block;
+  font-size: 15px;
+  line-height: 1.7;
+  letter-spacing: -0.02em;
+  color: rgba(80, 62, 46, 0.92);
+}
+
+.copy-note {
+  font-size: 15px;
+  line-height: 1.75;
+  letter-spacing: -0.02em;
+  color: rgba(80, 62, 46, 0.88);
+}
+
+/* 점선 연결 */
+.guide-line {
+  position: absolute;
+  height: 0;
+  border-top: 3px dotted var(--point-sub);
+  z-index: 4;
+}
+
+.guide-line-left {
+  top: 61%;
+  width: 90px;
+  left: 14px;
+}
+
+.guide-line-right {
+  top: 28%;
+  width: 160px;
+  right: 28px;
+}
+
+/* =========================
+   EXPRESSION SECTION
+========================= */
+
+.expression {
+  position: relative;
+  min-height: 100vh;
+  background: #000;
+  padding: 0 4vw;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.expression-row {
+
+  position: relative;
+  z-index: 3;
+
+  width: min(92vw, 1500px);
+
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: clamp(8px, 1vw, 18px);
+
+  align-items: center;
+  justify-items: center;
+}
+
+.expression-item {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  cursor: none;
+
+  transition: transform 0.28s ease, filter 0.28s ease;
+}
+
+.expression-img {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+
+  transition:
+    opacity 0.28s ease,
+    transform 0.28s ease;
+}
+
+/* 기본 파랑 보이기 */
+.expression-default {
+  opacity: 1;
+}
+
+/* hover용 핑크는 처음엔 숨김 */
+.expression-hover {
+  opacity: 0;
+}
+
+/* hover하면 완전 교체 */
+.expression-item.is-active .expression-default {
+  opacity: 0;
+}
+
+.expression-item.is-active .expression-hover {
+  opacity: 1;
+}
+
+/* 통통 뜨는 느낌 */
+.expression-item.is-active {
+  transform: translateY(-10px) scale(1.06);
+  filter:
+    drop-shadow(0 0 16px rgba(255, 135, 179, 0.36))
+    drop-shadow(0 0 8px rgba(114, 204, 219, 0.24));
+}
+
+.expression-symbols {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.expr-symbol {
+  position: absolute;
+  display: block;
+  opacity: 0.22;
+  filter: blur(0.2px);
+  animation-name: exprSymbolFloat;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes exprSymbolFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(var(--rotate-start));
+  }
+
+  50% {
+    transform: translate3d(0, var(--float-y), 0) rotate(var(--rotate-end));
+  }
+}
+
+/* =========================
+   CONTACT VIDEO SECTION
+========================= */
+
+.contact {
+  background: var(--bg-main);
+  min-height: 100vh;
+  padding: 110px 6vw;
+  display: flex;
+  align-items: center;
+}
+
+.contact-inner {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.contact-copy {
+  color: var(--text-main);
+}
+
+.contact-kicker {
+  margin: 0 0 18px;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 34px;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--point-sub);
+}
+
+.contact-title {
+  margin: 0;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: clamp(44px, 5vw, 76px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--text-main);
+}
+
+.contact-video-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 36px;
+  overflow: hidden;
+
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 28px 80px rgba(80, 62, 46, 0.12),
+    0 0 42px rgba(114, 204, 219, 0.16);
+}
+
+.contact-video-wrap iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* =========================
+   BELOW SECTIONS
+========================= */
+
+.section-desc {
+  max-width: 640px;
+  margin-bottom: 32px;
+}
+
+.expression,
+.contact,
+.hub,
+.docking,
+.symbols,
+.package {
+  background: var(--bg-main);
+}
+
+/* =========================
+   CREDIT FOOTER
+========================= */
+
+.credit {
+  min-height: auto;
+  padding: 54px 6vw 46px;
+  background: var(--omphi-blue);
+  color: var(--bg-main);
+}
+
+.credit-inner {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1.1fr auto 1fr;
+  gap: 32px;
+  align-items: end;
+}
+
+.credit-main {
+  text-align: left;
+}
+
+.credit-logo {
+  display: block;
+  width: 112px;
+  height: auto;
+  margin: 0 0 14px;
+}
+
+.credit-exhibition {
+  margin: 0;
+  font-family: "OmphiEng", "OmphiBody", sans-serif;
+  font-size: 12px;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--bg-main) 78%, transparent);
+}
+
+.credit-exhibition span {
+  font-family: "OmphiEng", "OmphiBody", sans-serif;
+  color: var(--bg-main);
+}
+
+.credit-members {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--bg-main) 86%, transparent);
+}
+
+.credit-members span + span::before {
+  content: "/";
+  margin-right: 16px;
+  color: color-mix(in srgb, var(--bg-main) 46%, transparent);
+}
+
+.credit-copy {
+  margin: 0;
+  text-align: right;
+  font-family: "OmphiEng", "OmphiBody", sans-serif;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--bg-main) 62%, transparent);
+}
+
+/* 반응형 */
+@media (max-width: 760px) {
+  .credit {
+    padding: 44px 5vw 40px;
+  }
+
+  .credit-inner {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    text-align: center;
+  }
+
+  .credit-main,
+  .credit-copy {
+    text-align: center;
+  }
+
+  .credit-members {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+}
+
+.placeholder {
+  min-height: 420px;
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px dashed rgba(80, 62, 46, 0.25);
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  color: rgba(80, 62, 46, 0.45);
+}
+
+.placeholder.model {
+  min-height: 520px;
+}
+
+.info-card-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 28px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(80, 62, 46, 0.06);
+}
+
+.dock-area {
+  min-height: 430px;
+  border-radius: 36px;
+  background: rgba(255, 255, 255, 0.58);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 40px;
+}
+
+.drag-pet,
+.hub-target {
+  width: 130px;
+  height: 130px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: var(--point-sub);
+  color: white;
+  font-weight: 700;
+}
+
+.hub-target {
+  width: 190px;
+  height: 190px;
+  background: #ffffff;
+  color: var(--point-sub);
+  box-shadow: 0 0 50px rgba(111, 212, 223, 0.45);
+}
+
+.symbol-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.symbol-card {
+  min-height: 180px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.72);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.symbol-card span {
+  font-size: 13px;
+  color: rgba(80, 62, 46, 0.5);
+}
+
+.symbol-card strong {
+  font-size: 22px;
+}
+
+.symbol-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(80, 62, 46, 0.12);
+}
+
+/* =========================
+   BROWN HUB CHAPTER
+   hub → docking → symbols → hub-film
+========================= */
+
+/* 1) Hub: 베이지에서 갈색으로 진입 */
+.hub {
+  position: relative;
+  min-height: 100vh;
+
+  background:
+    linear-gradient(
+      to bottom,
+      var(--bg-main) 0%,
+      var(--bg-main) 16%,
+      color-mix(in srgb, var(--bg-main) 72%, var(--text-main) 28%) 38%,
+      color-mix(in srgb, var(--bg-main) 38%, var(--text-main) 62%) 68%,
+      var(--text-main) 100%
     );
 
-    if (isDaughter && isMom) {
-      el.classList.add("state-shared");
-    } else if (isDaughter) {
-      el.classList.add("state-daughter");
-    } else if (isMom) {
-      el.classList.add("state-mom");
-    } else {
-      el.classList.add("state-idle");
-    }
-  });
+  padding: 190px 6vw 120px;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
 }
 
-function updateCreatedSymbols() {
-  applyDockState(
-    Array.from(createdSymbolIds.daughter),
-    Array.from(createdSymbolIds.mom)
+/* 허브 콘텐츠를 갈색 배경이 충분히 깔린 지점으로 내림 */
+.hub-layout {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-top: 140px;
+}
+
+/* Symbol Hub device: Omphi Pet device와 같은 세팅 */
+.hub-device-label {
+  margin: 0 0 80px;
+
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+
+  color: var(--bg-main);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.hub-main-wrap {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: minmax(360px, 1fr) minmax(300px, 0.85fr);
+  gap: clamp(48px, 7vw, 100px);
+  align-items: center;
+}
+
+.hub-model-wrap {
+  position: relative;
+  width: min(560px, 42vw);
+  aspect-ratio: 1 / 1;
+  justify-self: center;
+}
+
+.hub-model-wrap::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 92%;
+  height: 92%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--bg-main) 45%, transparent) 0%,
+    color-mix(in srgb, var(--point-sub) 30%, transparent) 30%,
+    color-mix(in srgb, var(--point-main) 18%, transparent) 52%,
+    transparent 74%
   );
+
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: 1;
 }
 
-function saveCurrentSymbols(owner) {
-  const ids = getOwnerSymbolIds(owner);
+.hub-model-viewer {
+  position: relative;
+  z-index: 2;
 
-  ids.forEach((id) => {
-    createdSymbolIds[owner].add(id);
-  });
+  width: 100%;
+  height: 100%;
+
+  display: block;
+  background: transparent;
+  --poster-color: transparent;
+
+  filter:
+    brightness(0.95)
+    contrast(1.08)
+    saturate(1.18)
+    drop-shadow(0 26px 48px color-mix(in srgb, var(--text-main) 34%, transparent))
+    drop-shadow(0 0 32px color-mix(in srgb, var(--bg-main) 22%, transparent));
 }
 
-function hasSharedKeyword() {
-  return Array.from(createdSymbolIds.daughter).some((id) =>
-    createdSymbolIds.mom.has(id)
+.hub-copy {
+  color: var(--bg-main);
+}
+
+.hub-copy h3 {
+  margin: 0 0 18px;
+
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+
+  color: var(--bg-main);
+}
+
+.hub-copy p {
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 1.9;
+  letter-spacing: -0.03em;
+  color: color-mix(in srgb, var(--bg-main) 86%, transparent);
+}
+
+
+/* 2) Docking / Symbols / Hub Film: 갈색 유지 */
+.docking,
+.symbols,
+#hub-film {
+  background: var(--text-main);
+  color: var(--bg-main);
+}
+
+/* 갈색 영역 안의 제목 */
+.docking h2,
+.symbols h2,
+#hub-film h2 {
+  color: var(--bg-main);
+}
+
+/* 갈색 영역 안의 설명 */
+.docking .section-desc,
+.symbols .section-desc,
+#hub-film .section-desc {
+  color: color-mix(in srgb, var(--bg-main) 84%, transparent);
+}
+
+/* =========================
+   DOCKING INTERACTION
+========================= */
+
+.docking {
+  background: var(--text-main);
+  color: var(--bg-main);
+  min-height: 100vh;
+  padding: 120px 6vw;
+  overflow: hidden;
+}
+
+.dock-layout {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.dock-device-label {
+  margin: 0 0 28px;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--bg-main);
+}
+
+.dock-desc {
+  margin: 0 auto 70px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: color-mix(in srgb, var(--bg-main) 82%, transparent);
+}
+
+.dock-stage {
+  position: relative;
+  width: min(980px, 100%);
+  min-height: 460px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr 360px 1fr;
+  align-items: center;
+  gap: 60px;
+}
+
+/* 펫 버튼 */
+.dock-pet {
+  position: relative;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: none;
+  transition:
+    transform 0.35s ease,
+    filter 0.35s ease;
+}
+
+.dock-pet img {
+  width: min(220px, 18vw);
+  display: block;
+  pointer-events: none;
+}
+
+.dock-pet:hover {
+  transform: translateY(-10px) scale(1.04);
+}
+
+/* 펫 머리 위 코어 빛 */
+.dock-pet::after {
+  content: "";
+  position: absolute;
+
+  left: var(--core-x);
+  top: var(--core-y);
+  width: var(--core-size);
+
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+
+  opacity: 0;
+  filter: blur(var(--core-blur));
+  pointer-events: none;
+
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.dock-pet-daughter {
+  --core-x: 57%;
+  --core-y: 24%;
+  --core-size: 26%;
+  --core-blur: 10px;
+}
+
+.dock-pet-mom {
+  --core-x: 30%;
+  --core-y: 24%;
+  --core-size: 26%;
+  --core-blur: 10px;
+}
+
+.dock-pet-daughter::after {
+  background: var(--point-sub);
+}
+
+.dock-pet-mom::after {
+  background: var(--point-main);
+}
+
+.dock-pet.is-docked::after {
+  opacity: 0.62;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.dock-pet.is-docked {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 24px color-mix(in srgb, var(--bg-main) 24%, transparent));
+}
+
+/* 허브 */
+.dock-hub {
+  position: relative;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: var(--bg-main);
+
+  display: grid;
+  place-items: center;
+
+  box-shadow:
+    0 28px 80px color-mix(in srgb, #000 24%, transparent),
+    0 0 44px color-mix(in srgb, var(--bg-main) 18%, transparent);
+
+  overflow: hidden;
+  transition:
+    box-shadow 0.4s ease,
+    transform 0.4s ease;
+}
+
+.dock-hub-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0;
+  filter: blur(28px);
+  transition: opacity 0.4s ease;
+}
+
+.dock-hub-face {
+  position: relative;
+  width: 62%;
+  height: 62%;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.dock-hub-ring {
+  position: absolute;
+  width: 82%;
+  height: 82%;
+  border-radius: 50%;
+  border: 8px solid var(--text-main);
+  opacity: 0.18;
+}
+
+.dock-hub-ring.small {
+  width: 48%;
+  height: 48%;
+  border-width: 6px;
+}
+
+.dock-hub-core {
+  position: relative;
+  z-index: 2;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--text-main) 20%, var(--bg-main) 80%);
+  transition:
+    background 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.35s ease;
+}
+
+.dock-hub-status {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  transform: translateX(-50%);
+  margin: 0;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--text-main);
+  opacity: 0.64;
+  white-space: nowrap;
+}
+
+/* 딸 도킹 상태 */
+.dock-stage.daughter-active .dock-hub-glow {
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--point-sub) 70%, transparent) 0%,
+    transparent 68%
   );
+  opacity: 0.52;
 }
 
-function updateDockVisual() {
-  if (!dockStage || !dockHub) return;
+.dock-stage.daughter-active .dock-hub-core {
+  background: var(--point-sub);
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--point-sub) 80%, transparent),
+    0 0 42px color-mix(in srgb, var(--point-sub) 48%, transparent);
+  transform: scale(1.08);
+}
 
-  const daughterDocked = dockData.daughter.docked;
-  const momDocked = dockData.mom.docked;
-
-  dockStage.classList.remove(
-    "daughter-active",
-    "mom-active",
-    "shared-active"
+/* 엄마 도킹 상태 */
+.dock-stage.mom-active .dock-hub-glow {
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--point-main) 70%, transparent) 0%,
+    transparent 68%
   );
-
-  dockPets.forEach((pet) => {
-    const owner = pet.dataset.owner;
-    pet.classList.toggle("is-docked", dockData[owner].docked);
-  });
-
-  if (daughterDocked && momDocked) {
-    dockStage.classList.add("shared-active");
-    dockHub.querySelector(".dock-hub-status").textContent = "두 옴피가 연결됐어요";
-  } else if (daughterDocked) {
-    dockStage.classList.add("daughter-active");
-    dockHub.querySelector(".dock-hub-status").textContent = "딸의 마음 신호";
-  } else if (momDocked) {
-    dockStage.classList.add("mom-active");
-    dockHub.querySelector(".dock-hub-status").textContent = "엄마의 마음 신호";
-  } else if (
-    createdSymbolIds.daughter.size > 0 ||
-    createdSymbolIds.mom.size > 0
-  ) {
-    dockHub.querySelector(".dock-hub-status").textContent = "심볼이 남아 있어요";
-  } else {
-    dockHub.querySelector(".dock-hub-status").textContent = "옴피를 눌러 시작해요";
-  }
+  opacity: 0.52;
 }
 
-function resetDocking() {
-  dockData.daughter.docked = false;
-  dockData.daughter.topic = null;
-  dockData.daughter.feel = null;
-
-  dockData.mom.docked = false;
-  dockData.mom.topic = null;
-  dockData.mom.feel = null;
-
-  dockData.currentOwner = null;
-
-  createdSymbolIds.daughter.clear();
-  createdSymbolIds.mom.clear();
-
-  document.querySelectorAll("[data-topic], [data-feel]").forEach((button) => {
-    button.classList.remove("is-selected");
-  });
-
-  if (dockChoicePanel) {
-    dockChoicePanel.classList.remove("is-open");
-  }
-
-  if (dockResetSymbol) {
-    dockResetSymbol.classList.remove("is-visible");
-  }
-
-  applyDockState([], []);
-  updateDockVisual();
-
-  if (dockHub) {
-    dockHub.querySelector(".dock-hub-status").textContent = "옴피를 눌러 시작해요";
-  }
+.dock-stage.mom-active .dock-hub-core {
+  background: var(--point-main);
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--point-main) 80%, transparent),
+    0 0 42px color-mix(in srgb, var(--point-main) 48%, transparent);
+  transform: scale(1.08);
 }
 
-function openDockChoice(owner) {
-  dockData.currentOwner = owner;
-
-  if (dockChoicePanel) {
-    dockChoicePanel.classList.add("is-open");
-  }
-
-  if (dockOwnerLabel) {
-    dockOwnerLabel.textContent = owner === "daughter" ? "딸 옴피" : "엄마 옴피";
-  }
-
-  document.querySelectorAll("[data-topic]").forEach((btn) => {
-    btn.classList.toggle("is-selected", btn.dataset.topic === dockData[owner].topic);
-  });
-
-  document.querySelectorAll("[data-feel]").forEach((btn) => {
-    btn.classList.toggle("is-selected", btn.dataset.feel === dockData[owner].feel);
-  });
+/* 둘 다 도킹된 상태 */
+.dock-stage.shared-active .dock-hub-glow {
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--point-main) 50%, var(--point-sub) 50%) 0%,
+    transparent 70%
+  );
+  opacity: 0.72;
 }
 
-dockPets.forEach((pet) => {
-  pet.addEventListener("click", () => {
-    const owner = pet.dataset.owner;
-
-    // 이미 붙어 있으면: 펫만 떼기
-    if (dockData[owner].docked) {
-      dockData[owner].docked = false;
-      dockData.currentOwner = null;
-
-      // 선택창만 닫기
-      if (dockChoicePanel) {
-        dockChoicePanel.classList.remove("is-open");
-      }
-
-      // 현재 선택 버튼 표시만 지우기
-      document.querySelectorAll("[data-topic], [data-feel]").forEach((button) => {
-        button.classList.remove("is-selected");
-      });
-
-      // 중요: createdSymbolIds는 건드리지 않음
-      updateCreatedSymbols();
-      updateDockVisual();
-      return;
-    }
-
-    // 안 붙어 있으면: 도킹 + 선택창 열기
-    dockData[owner].docked = true;
-
-    openDockChoice(owner);
-    updateCreatedSymbols();
-    updateDockVisual();
-  });
-});
-
-document.querySelectorAll("[data-topic]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const owner = dockData.currentOwner;
-    if (!owner) return;
-
-    dockData[owner].topic = button.dataset.topic;
-
-    document.querySelectorAll("[data-topic]").forEach((btn) => {
-      btn.classList.remove("is-selected");
-    });
-
-    button.classList.add("is-selected");
-  });
-});
-
-document.querySelectorAll("[data-feel]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const owner = dockData.currentOwner;
-    if (!owner) return;
-
-    dockData[owner].feel = button.dataset.feel;
-
-    document.querySelectorAll("[data-feel]").forEach((btn) => {
-      btn.classList.remove("is-selected");
-    });
-
-    button.classList.add("is-selected");
-  });
-});
-
-if (dockMakeSymbol) {
-  dockMakeSymbol.addEventListener("click", () => {
-    const owner = dockData.currentOwner;
-
-    if (!owner) return;
-
-    const current = dockData[owner];
-
-    if (!current.topic || !current.feel) {
-      if (dockHub) {
-        dockHub.querySelector(".dock-hub-status").textContent = "choose both";
-      }
-      return;
-    }
-
-    saveCurrentSymbols(owner);
-    updateCreatedSymbols();
-    updateDockVisual();
-
-    if (dockChoicePanel) {
-      dockChoicePanel.classList.remove("is-open");
-    }
-
-    if (dockResetSymbol) {
-      dockResetSymbol.classList.add("is-visible");
-    }
-
-    if (dockHub) {
-      dockHub.querySelector(".dock-hub-status").textContent =
-        hasSharedKeyword() ? "symbol merged" : "심볼이 만들어졌어요!";
-    }
-  });
+.dock-stage.shared-active .dock-hub-core {
+  background: color-mix(in srgb, var(--point-main) 50%, var(--point-sub) 50%);
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--point-main) 50%, var(--point-sub) 50%),
+    0 0 52px color-mix(in srgb, var(--point-main) 40%, var(--point-sub) 60%);
 }
 
-if (dockResetSymbol) {
-  dockResetSymbol.addEventListener("click", () => {
-    resetDocking();
-  });
+/* 선택 패널 */
+.dock-choice-panel {
+  width: min(620px, 100%);
+  margin: 64px auto 0;
+  padding: 28px 34px 32px;
+  border-radius: 34px;
+
+  background: color-mix(in srgb, var(--bg-main) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--bg-main) 24%, transparent);
+
+  opacity: 0;
+  transform: translateY(24px);
+  pointer-events: none;
+
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
 }
 
-buildHubSymbols();
-applyDockState([], []);
-updateDockVisual();
+.dock-choice-panel.is-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
 
-// -------------------------
-// Symbol flip cards
-// -------------------------
-document.querySelectorAll(".flip-symbol-card").forEach((card) => {
-  card.addEventListener("click", () => {
-    card.classList.toggle("is-flipped");
-  });
-});
+.dock-choice-title {
+  margin: 0 0 24px;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 30px;
+  line-height: 1;
+  color: var(--bg-main);
+}
 
-// -------------------------
-// Accordion leaflet open / front-back
-// -------------------------
-const accordionLeaflets = document.querySelectorAll(".accordion-leaflet");
+.dock-choice-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
 
-accordionLeaflets.forEach((leaflet) => {
-  const openButton = leaflet.querySelector(".leaflet-toggle");
-  const sideButton = leaflet.querySelector(".leaflet-side-toggle");
+.dock-choice-group p {
+  margin: 0 0 12px;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 24px;
+  color: var(--point-sub);
+}
 
-  if (!openButton || !sideButton) return;
+.dock-choice-group button,
+.dock-make-symbol {
+  border: 1px solid color-mix(in srgb, var(--bg-main) 35%, transparent);
+  background: color-mix(in srgb, var(--bg-main) 12%, transparent);
+  color: var(--bg-main);
+  border-radius: 999px;
+  padding: 9px 16px;
+  margin: 4px;
+  cursor: none;
+}
 
-  openButton.addEventListener("click", (event) => {
-    event.stopPropagation();
+.dock-choice-group button.is-selected {
+  background: var(--bg-main);
+  color: var(--text-main);
+}
 
-    const isOpen = leaflet.classList.toggle("is-open");
+.dock-make-symbol {
+  margin-top: 24px;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 24px;
+  line-height: 1;
+}
 
-    if (!isOpen) {
-      leaflet.classList.remove("show-back");
-      openButton.textContent = "open";
-      sideButton.textContent = "back";
-    } else {
-      openButton.textContent = "close";
-    }
-  });
+/* =========================
+   DOCKING PET MOVE
+========================= */
 
-  sideButton.addEventListener("click", (event) => {
-    event.stopPropagation();
+/* 기본 위치에서 부드럽게 움직이도록 */
+.dock-pet {
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.35s ease;
+}
 
-    if (!leaflet.classList.contains("is-open")) {
-      leaflet.classList.add("is-open");
-      openButton.textContent = "close";
-    }
+/* 딸 펫: 왼쪽에서 허브 쪽으로 이동 */
+.dock-pet-daughter.is-docked {
+  transform: translateX(150px) scale(0.82);
+  z-index: 5;
+}
 
-    const isBack = leaflet.classList.toggle("show-back");
-    sideButton.textContent = isBack ? "front" : "back";
-  });
-});
+/* 엄마 펫: 오른쪽에서 허브 쪽으로 이동 */
+.dock-pet-mom.is-docked {
+  transform: translateX(-150px) scale(0.82);
+  z-index: 5;
+}
 
-// -------------------------
-// Package loose item modal - final stable
-// -------------------------
-const looseItems = document.querySelectorAll(".loose-item");
-const looseModal = document.getElementById("looseModal");
+/* 도킹된 펫은 살짝 빛나게 */
+.dock-pet-daughter.is-docked {
+  filter:
+    drop-shadow(0 0 18px color-mix(in srgb, var(--point-sub) 70%, transparent))
+    drop-shadow(0 0 36px color-mix(in srgb, var(--point-sub) 34%, transparent));
+}
 
-if (looseModal) {
-  const closeBtn = looseModal.querySelector(".loose-close");
-  const prevBtn = looseModal.querySelector(".modal-prev");
-  const nextBtn = looseModal.querySelector(".modal-next");
-  const title = looseModal.querySelector(".modal-title");
-  const modalStage = looseModal.querySelector(".loose-modal-stage");
+.dock-pet-mom.is-docked {
+  filter:
+    drop-shadow(0 0 18px color-mix(in srgb, var(--point-main) 70%, transparent))
+    drop-shadow(0 0 36px color-mix(in srgb, var(--point-main) 34%, transparent));
+}
 
-  const minibookImg = looseModal.querySelector(".modal-page-img");
-  const symbolModal = looseModal.querySelector(".modal-symbol");
+/* Symbol card도 갈색 배경에 맞게 */
+.symbol-card {
+  background: color-mix(in srgb, var(--bg-main) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--bg-main) 22%, transparent);
+  color: var(--bg-main);
+  box-shadow: 0 20px 60px color-mix(in srgb, #000 18%, transparent);
+}
 
-  const minibookPages = [
-    "./assets/images/minibook-01.png",
-    "./assets/images/minibook-02.png",
-    "./assets/images/minibook-03.png",
-    "./assets/images/minibook-04.png",
-    "./assets/images/minibook-05.png",
-    "./assets/images/minibook-06.png",
-    "./assets/images/minibook-07.png",
-    "./assets/images/minibook-08.png",
-    "./assets/images/minibook-09.png",
-    "./assets/images/minibook-10.png",
-    "./assets/images/minibook-11.png",
-    "./assets/images/minibook-12.png",
-    "./assets/images/minibook-13.png",
-    "./assets/images/minibook-14.png",
-    "./assets/images/minibook-15.png"
-  ];
+.symbol-card span {
+  color: color-mix(in srgb, var(--bg-main) 58%, transparent);
+}
 
-  let activeItem = null;
-  let minibookIndex = 0;
+.symbol-card strong {
+  color: var(--bg-main);
+}
 
-  let zoomScale = 1;
-  let zoomX = 0;
-  let zoomY = 0;
 
-  function resetWheelZoom() {
-    const targets = looseModal.querySelectorAll(".zoom-target");
-
-    targets.forEach((target) => {
-      target.classList.remove("zoom-target");
-      target.style.removeProperty("--zoom-scale");
-      target.style.removeProperty("--zoom-x");
-      target.style.removeProperty("--zoom-y");
-    });
-
-    zoomScale = 1;
-    zoomX = 0;
-    zoomY = 0;
-    looseModal.classList.remove("is-zooming");
-  }
-
-  function resetModalState() {
-    looseModal.classList.remove(
-      "brand-open",
-      "brand-back",
-      "page-changing",
-      "is-zooming"
+/* 3) Package: 갈색에서 다시 베이지로 복귀 */
+.package {
+  background:
+    linear-gradient(
+      to bottom,
+      var(--text-main) 0%,
+      color-mix(in srgb, var(--bg-main) 20%, var(--text-main) 80%) 24%,
+      color-mix(in srgb, var(--bg-main) 58%, var(--text-main) 42%) 58%,
+      var(--bg-main) 100%
     );
 
-    if (symbolModal) {
-      symbolModal.classList.remove("is-flipped");
-    }
+  color: var(--text-main);
+}
 
-    resetWheelZoom();
+/* =========================
+   HUB COLOR TRANSITION
+========================= */
+
+.hub-transition {
+  height: 80vh;
+
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--text-main) 0%, transparent) 0%,
+      color-mix(in srgb, var(--text-main) 0%, transparent) 22%,
+      color-mix(in srgb, var(--text-main) 12%, transparent) 48%,
+      color-mix(in srgb, var(--text-main) 42%, transparent) 72%,
+      var(--text-main) 100%
+    ),
+    var(--bg-main);
+}
+
+/* =========================
+   HUB DEVICE SECTION
+========================= */
+
+.hub {
+  position: relative;
+  min-height: 100vh;
+
+  background: var(--text-main);
+  color: var(--bg-main);
+
+  padding: 120px 6vw 120px;
+  overflow: hidden;
+}
+
+.hub-layout {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hub-layout {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-top: 36vh;
+}
+
+.hub-device-label {
+  margin: 0;
+  font-family: "OmphiTitle", sans-serif;
+  transform: translate(-300px, -10px);
+  font-size: 50px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--bg-main);
+  white-space: nowrap;
+}
+
+.hub-main-wrap {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: minmax(360px, 1fr) minmax(300px, 0.85fr);
+  gap: clamp(48px, 7vw, 100px);
+  align-items: center;
+}
+
+.hub-model-wrap {
+  position: relative;
+  width: min(560px, 42vw);
+  aspect-ratio: 1 / 1;
+  justify-self: center;
+}
+
+.hub-model-wrap::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 92%;
+  height: 92%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--bg-main) 45%, transparent) 0%,
+    color-mix(in srgb, var(--point-sub) 30%, transparent) 30%,
+    color-mix(in srgb, var(--point-main) 18%, transparent) 52%,
+    transparent 74%
+  );
+
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hub-model-viewer {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  height: 100%;
+
+  display: block;
+  background: transparent;
+  --poster-color: transparent;
+
+  filter:
+    brightness(0.95)
+    contrast(1.08)
+    saturate(1.18)
+    drop-shadow(0 26px 48px color-mix(in srgb, var(--text-main) 34%, transparent))
+    drop-shadow(0 0 32px color-mix(in srgb, var(--bg-main) 22%, transparent));
+}
+
+.hub-copy {
+  color: var(--bg-main);
+}
+
+.hub-copy h3 {
+  margin: 0 0 18px;
+
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+
+  color: var(--bg-main);
+}
+
+.hub-copy p {
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 1.9;
+  letter-spacing: -0.03em;
+  color: color-mix(in srgb, var(--bg-main) 86%, transparent);
+}
+
+/* =========================
+   DOCKING SYMBOL SCREEN
+========================= */
+
+.hub-symbol-screen {
+  position: relative;
+  width: min(460px, 64vw);
+  height: min(460px, 64vw);
+  margin: 80px auto 0;
+
+  border-radius: 50%;
+  background: var(--bg-main);
+
+  box-shadow:
+    0 24px 70px color-mix(in srgb, #000 18%, transparent),
+    0 0 36px color-mix(in srgb, var(--point-sub) 22%, transparent);
+
+  overflow: hidden;
+}
+
+.hub-symbol-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.hub-symbol {
+  opacity: 0;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.hub-symbol.state-daughter,
+.hub-symbol.state-mom,
+.hub-symbol.state-shared {
+  opacity: 1;
+}
+
+.hub-symbol-inner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  animation: hubFloat var(--dur, 6s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+.hub-symbol-layer {
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+
+  -webkit-mask: var(--mask) no-repeat center / contain;
+  mask: var(--mask) no-repeat center / contain;
+}
+
+/* 뼈대는 갈색 */
+.hub-symbol-bone {
+  color: var(--text-main);
+  opacity: 0.95;
+}
+
+/* 코어 */
+.hub-symbol-core {
+  opacity: 0;
+  transform: scale(0.92);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    filter 0.35s ease;
+}
+
+/* 딸 */
+.hub-symbol.state-daughter .hub-symbol-core {
+  color: var(--point-sub);
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 엄마 */
+.hub-symbol.state-mom .hub-symbol-core {
+  color: var(--point-main);
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 공통 */
+.hub-symbol.state-shared .hub-symbol-core {
+  color: color-mix(in srgb, var(--point-main) 50%, var(--point-sub) 50%);
+  opacity: 1;
+  transform: scale(1.04);
+  filter: drop-shadow(
+    0 0 12px color-mix(in srgb, var(--point-main) 45%, var(--point-sub) 55%)
+  );
+}
+
+@keyframes hubFloat {
+  0% {
+    transform: translateY(0) scale(1);
   }
 
-  function setMinibookPage(index) {
-    if (!minibookImg) return;
-
-    minibookIndex = (index + minibookPages.length) % minibookPages.length;
-
-    looseModal.classList.add("page-changing");
-
-    setTimeout(() => {
-      minibookImg.src = minibookPages[minibookIndex];
-    }, 120);
-
-    setTimeout(() => {
-      looseModal.classList.remove("page-changing");
-    }, 360);
+  50% {
+    transform: translateY(calc(var(--float-y, 10px) * -1)) scale(1.02);
   }
 
-  function openLooseModal(item) {
-    activeItem = item;
-    resetModalState();
+  100% {
+    transform: translateY(5px) scale(0.99);
+  }
+}
 
-    looseModal.classList.add("is-open");
-    looseModal.dataset.active = item;
-    looseModal.setAttribute("aria-hidden", "false");
+/* =========================
+   DOCKING HUB SYMBOL INSIDE HUB
+========================= */
 
-    if (item === "brand") {
-      if (title) title.textContent = "Brand Story Leaflet";
-      if (prevBtn) prevBtn.textContent = "close";
-      if (nextBtn) nextBtn.textContent = "open";
-    }
+.dock-hub .hub-symbol-screen {
+  position: absolute;
+  inset: 0;
 
-    if (item === "minibook") {
-      if (title) title.textContent = "Mini Book";
-      if (prevBtn) prevBtn.textContent = "prev";
-      if (nextBtn) nextBtn.textContent = "next";
+  width: 100%;
+  height: 100%;
+  margin: 0;
 
-      minibookIndex = 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  overflow: hidden;
 
-      if (minibookImg) {
-        minibookImg.src = minibookPages[minibookIndex];
-      }
-    }
+  z-index: 2;
+  pointer-events: none;
+}
 
-    if (item === "symbol") {
-      if (title) title.textContent = "Symbol Card";
-      if (prevBtn) prevBtn.textContent = "front";
-      if (nextBtn) nextBtn.textContent = "flip";
-    }
+.dock-hub .hub-symbol-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.hub-symbol {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+
+  opacity: 0;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.hub-symbol.state-daughter,
+.hub-symbol.state-mom,
+.hub-symbol.state-shared {
+  opacity: 1;
+}
+
+.hub-symbol.state-shared {
+  transform: translate(-50%, -50%) scale(1.12);
+}
+
+.hub-symbol-inner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  animation: hubSymbolFloat var(--dur, 6s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+.hub-symbol-layer {
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+
+  -webkit-mask: var(--mask) no-repeat center / contain;
+  mask: var(--mask) no-repeat center / contain;
+}
+
+.hub-symbol-bone {
+  color: var(--text-main);
+  opacity: 0.95;
+}
+
+.hub-symbol-core {
+  opacity: 0;
+  transform: scale(0.92);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    filter 0.35s ease;
+}
+
+.hub-symbol.state-daughter .hub-symbol-core {
+  color: var(--point-sub);
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hub-symbol.state-mom .hub-symbol-core {
+  color: var(--point-main);
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hub-symbol.state-shared .hub-symbol-core {
+  color: color-mix(in srgb, var(--point-main) 50%, var(--point-sub) 50%);
+  opacity: 1;
+  transform: scale(1.06);
+  filter:
+    drop-shadow(0 0 10px color-mix(in srgb, var(--point-main) 45%, var(--point-sub) 55%))
+    drop-shadow(0 0 22px color-mix(in srgb, var(--point-main) 35%, var(--point-sub) 65%));
+}
+
+/* 기본 허브 UI는 심볼보다 위에 살짝 보이게 */
+.dock-hub-face {
+  z-index: 3;
+  pointer-events: none;
+}
+
+.dock-hub-status {
+  z-index: 4;
+}
+
+@keyframes hubSymbolFloat {
+  0% {
+    transform: translateY(0) scale(1);
   }
 
-  function closeLooseModal() {
-    looseModal.classList.remove("is-open");
-    looseModal.setAttribute("aria-hidden", "true");
-    activeItem = null;
-    resetModalState();
+  50% {
+    transform: translateY(calc(var(--float-y, 8px) * -1)) scale(1.02);
   }
 
-  looseItems.forEach((item) => {
-    item.addEventListener("click", (event) => {
-      event.stopPropagation();
-      openLooseModal(item.dataset.item);
-    });
-  });
-
-  if (closeBtn) {
-    closeBtn.addEventListener("click", (event) => {
-      event.stopPropagation();
-      closeLooseModal();
-    });
+  100% {
+    transform: translateY(4px) scale(0.99);
   }
+}
 
-  looseModal.addEventListener("click", (event) => {
-    if (event.target.classList.contains("loose-modal-bg")) {
-      closeLooseModal();
-    }
-  });
+/* 선택 패널 타이틀 글씨체 통일 */
+.dock-choice-title,
+.dock-choice-title span,
+#dockOwnerLabel {
+  font-family: "OmphiTitle", sans-serif;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
 
-  if (nextBtn) {
-    nextBtn.addEventListener("click", (event) => {
-      event.stopPropagation();
+/* =========================
+   DOCKING GLOW UPGRADE
+========================= */
 
-      const currentItem = looseModal.dataset.active;
+/* 기본 허브 원 */
+.dock-hub {
+  border: 2px solid color-mix(in srgb, var(--bg-main) 36%, transparent);
+  transition:
+    box-shadow 0.45s ease,
+    border-color 0.45s ease,
+    transform 0.45s ease;
+}
 
-      if (currentItem === "brand") {
-        resetWheelZoom();
+/* 딸만 도킹: 허브 테두리 파란빛 */
+.dock-stage.daughter-active .dock-hub {
+  border-color: color-mix(in srgb, var(--point-sub) 72%, var(--bg-main) 28%);
+  box-shadow:
+    0 28px 80px color-mix(in srgb, #000 24%, transparent),
+    0 0 26px color-mix(in srgb, var(--point-sub) 62%, transparent),
+    0 0 70px color-mix(in srgb, var(--point-sub) 28%, transparent);
+}
 
-        if (!looseModal.classList.contains("brand-open")) {
-          looseModal.classList.add("brand-open");
-          nextBtn.textContent = "back";
-          if (prevBtn) prevBtn.textContent = "close";
-        } else {
-          looseModal.classList.toggle("brand-back");
+/* 엄마만 도킹: 허브 테두리 핑크빛 */
+.dock-stage.mom-active .dock-hub {
+  border-color: color-mix(in srgb, var(--point-main) 72%, var(--bg-main) 28%);
+  box-shadow:
+    0 28px 80px color-mix(in srgb, #000 24%, transparent),
+    0 0 26px color-mix(in srgb, var(--point-main) 62%, transparent),
+    0 0 70px color-mix(in srgb, var(--point-main) 28%, transparent);
+}
 
-          nextBtn.textContent = looseModal.classList.contains("brand-back")
-            ? "front"
-            : "back";
-        }
-      }
+/* 둘 다 도킹: 허브 테두리 보라빛 */
+.dock-stage.shared-active .dock-hub {
+  border-color: color-mix(in srgb, var(--point-main) 50%, var(--point-sub) 50%);
+  box-shadow:
+    0 28px 80px color-mix(in srgb, #000 24%, transparent),
+    0 0 30px color-mix(in srgb, var(--point-main) 50%, var(--point-sub) 50%),
+    0 0 86px color-mix(in srgb, var(--point-main) 42%, var(--point-sub) 58%);
+}
 
-      if (currentItem === "minibook") {
-        resetWheelZoom();
+/* 둘 다 도킹되면 펫 머리 코어도 보라색 */
+.dock-stage.shared-active .dock-pet.is-docked::after {
+  background: color-mix(in srgb, var(--point-main) 50%, var(--point-sub) 50%);
+  opacity: 0.78;
+  filter: blur(12px);
+}
 
-        minibookIndex = (minibookIndex + 1) % minibookPages.length;
-
-        if (minibookImg) {
-          minibookImg.src = minibookPages[minibookIndex];
-        }
-
-        looseModal.classList.add("page-changing");
-
-        setTimeout(() => {
-          looseModal.classList.remove("page-changing");
-        }, 260);
-      }
-
-      if (currentItem === "symbol" && symbolModal) {
-        resetWheelZoom();
-        symbolModal.classList.toggle("is-flipped");
-      }
-    });
-  }
-
-  if (prevBtn) {
-    prevBtn.addEventListener("click", (event) => {
-      event.stopPropagation();
-
-      const currentItem = looseModal.dataset.active;
-
-      if (currentItem === "brand") {
-        closeLooseModal();
-      }
-
-      if (currentItem === "minibook") {
-        resetWheelZoom();
-
-        minibookIndex =
-          (minibookIndex - 1 + minibookPages.length) % minibookPages.length;
-
-        if (minibookImg) {
-          minibookImg.src = minibookPages[minibookIndex];
-        }
-
-        looseModal.classList.add("page-changing");
-
-        setTimeout(() => {
-          looseModal.classList.remove("page-changing");
-        }, 260);
-      }
-
-      if (currentItem === "symbol" && symbolModal) {
-        resetWheelZoom();
-        symbolModal.classList.remove("is-flipped");
-      }
-    });
-  }
-
-  if (symbolModal) {
-    symbolModal.addEventListener("click", (event) => {
-      event.stopPropagation();
-
-      if (activeItem === "symbol") {
-        resetWheelZoom();
-        symbolModal.classList.toggle("is-flipped");
-      }
-    });
-  }
-
-  function getActiveZoomTarget() {
-    if (!looseModal.classList.contains("is-open")) return null;
-
-    if (activeItem === "brand") {
-      if (!looseModal.classList.contains("brand-open")) {
-        return looseModal.querySelector(".modal-brand-cover");
-      }
-
-      if (looseModal.classList.contains("brand-back")) {
-        return looseModal.querySelector(".modal-brand-back");
-      }
-
-      return looseModal.querySelector(".modal-brand-front");
-    }
-
-    if (activeItem === "minibook") {
-      return looseModal.querySelector(".modal-page-img");
-    }
-
-    if (activeItem === "symbol") {
-      return looseModal.querySelector(".modal-symbol-inner");
-    }
-
-    return null;
-  }
-
-  function applyWheelZoom(target) {
-    if (!target) return;
-
-    target.classList.add("zoom-target");
-    target.style.setProperty("--zoom-scale", zoomScale);
-    target.style.setProperty("--zoom-x", `${zoomX}px`);
-    target.style.setProperty("--zoom-y", `${zoomY}px`);
-
-    if (zoomScale > 1.02) {
-      looseModal.classList.add("is-zooming");
-    } else {
-      looseModal.classList.remove("is-zooming");
-    }
-  }
-
-  if (modalStage) {
-    modalStage.addEventListener(
-      "wheel",
-      (event) => {
-        if (!looseModal.classList.contains("is-open")) return;
-
-        event.preventDefault();
-
-        const target = getActiveZoomTarget();
-        if (!target) return;
-
-        const oldScale = zoomScale;
-        const zoomDelta = event.deltaY < 0 ? 0.12 : -0.12;
-
-        zoomScale = Math.max(1, Math.min(3.2, zoomScale + zoomDelta));
-
-        if (zoomScale > 1) {
-          const rect = modalStage.getBoundingClientRect();
-          const offsetX = event.clientX - (rect.left + rect.width / 2);
-          const offsetY = event.clientY - (rect.top + rect.height / 2);
-          const scaleDiff = zoomScale - oldScale;
-
-          zoomX -= offsetX * scaleDiff * 0.28;
-          zoomY -= offsetY * scaleDiff * 0.28;
-        } else {
-          zoomX = 0;
-          zoomY = 0;
-        }
-
-        applyWheelZoom(target);
-      },
-      { passive: false }
+/* 둘 다 도킹되면 펫 전체 glow도 보라색 */
+.dock-stage.shared-active .dock-pet.is-docked {
+  filter:
+    drop-shadow(
+      0 0 20px color-mix(in srgb, var(--point-main) 50%, var(--point-sub) 50%)
+    )
+    drop-shadow(
+      0 0 44px color-mix(in srgb, var(--point-main) 36%, var(--point-sub) 64%)
     );
-  }
-
-  window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && looseModal.classList.contains("is-open")) {
-      closeLooseModal();
-    }
-  });
 }
 
-// -------------------------
-// MINIBOOK ABSOLUTE FIX
-// document capture로 next/prev 클릭을 강제로 가로챔
-// -------------------------
-(() => {
-  const modal = document.getElementById("looseModal");
-  if (!modal) return;
+.dock-guide {
+  margin: -42px auto 58px;
 
-  const img = modal.querySelector(".modal-page-img");
-  const title = modal.querySelector(".modal-title");
-  const minibookButton = document.querySelector('.loose-item[data-item="minibook"]');
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
 
-  if (!img || !minibookButton) {
-    console.log("MINIBOOK FIX: img or button missing");
-    return;
+  color: color-mix(in srgb, var(--bg-main) 86%, transparent);
+  text-align: center;
+}
+
+.dock-guide span {
+  font-family: "OmphiTitle", sans-serif;
+}
+
+.dock-guide .guide-blue {
+  color: var(--point-sub);
+}
+
+.dock-guide .guide-pink {
+  color: var(--point-main);
+}
+
+.pet-device-label,
+.hub-device-label {
+  font-family: "OmphiTitle", sans-serif;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.hub-device-label {
+  font-size: 46px;
+  color: var(--bg-main);
+  margin: 0 0 96px;
+  transform: translateY(0);
+}
+
+/* =========================
+   FIX: symbol should appear above hub core
+========================= */
+
+.dock-hub .hub-symbol-screen {
+  z-index: 5;
+}
+
+.dock-hub .hub-symbol-stage {
+  z-index: 5;
+}
+
+.hub-symbol {
+  z-index: 5;
+}
+
+.dock-hub-face {
+  z-index: 2;
+  opacity: 0.42;
+}
+
+.dock-hub-status {
+  z-index: 6;
+}
+
+/* =========================
+   RESET SYMBOL BUTTON
+========================= */
+
+.dock-reset-symbol {
+  margin: 34px auto 0;
+  display: block;
+
+  border: 1px solid color-mix(in srgb, var(--bg-main) 36%, transparent);
+  background: color-mix(in srgb, var(--bg-main) 10%, transparent);
+  color: var(--bg-main);
+
+  border-radius: 999px;
+  padding: 10px 24px;
+
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+
+  cursor: none;
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.dock-reset-symbol.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.dock-reset-symbol:hover {
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+/* =========================
+   SYMBOL LANGUAGE FLIP CARDS
+========================= */
+
+.symbols {
+  background: var(--text-main);
+  color: var(--bg-main);
+  padding: 130px 6vw 150px;
+  overflow: hidden;
+}
+
+.symbol-section-inner {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.symbol-section-label {
+  margin: 0 0 24px;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 46px;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--bg-main);
+  text-align: center;
+}
+
+.symbol-section-desc {
+  margin: 0 auto 88px;
+  font-size: 16px;
+  line-height: 1.85;
+  color: color-mix(in srgb, var(--bg-main) 82%, transparent);
+  text-align: center;
+}
+
+.symbol-category {
+  margin-bottom: 110px;
+}
+
+.symbol-category:last-child {
+  margin-bottom: 0;
+}
+
+.symbol-category-title {
+  margin: 0 0 36px;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--point-sub);
+  text-align: center;
+}
+
+.feeling-category .symbol-category-title {
+  color: var(--point-main);
+}
+
+.symbol-card-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  gap: 24px;
+}
+
+.flip-symbol-card {
+  position: relative;
+  height: 210px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  perspective: 900px;
+  cursor: none;
+}
+
+.flip-card-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.35s ease;
+}
+
+.flip-symbol-card.is-flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-symbol-card {
+  transition: filter 0.35s ease, transform 0.35s ease;
+}
+
+.flip-symbol-card:hover {
+  filter:
+    drop-shadow(0 18px 34px color-mix(in srgb, #000 18%, transparent))
+    drop-shadow(0 0 20px color-mix(in srgb, var(--point-sub) 24%, transparent));
+  transform: translateY(-4px);
+}
+
+.flip-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  backface-visibility: hidden;
+  overflow: hidden;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid color-mix(in srgb, var(--bg-main) 24%, transparent);
+  background: color-mix(in srgb, var(--bg-main) 10%, transparent);
+}
+
+.flip-card-front::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border-radius: 26px;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--bg-main) 12%, transparent) 0%,
+    transparent 70%
+  );
+  opacity: 0.8;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+  background: var(--bg-main);
+  color: var(--text-main);
+  text-align: center;
+}
+
+.flip-card-back strong {
+  display: block;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 46px;
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.flip-card-back small {
+  display: block;
+  margin-top: 8px;
+  font-family: "OmphiBody", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  opacity: 0.62;
+}
+
+.symbol-float-wrap {
+  position: relative;
+  width: 126px;
+  aspect-ratio: 1 / 1;
+  display: block;
+  animation: symbolCardFloat 4.8s ease-in-out infinite;
+  z-index: 2;
+}
+
+.symbol-layer {
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  -webkit-mask: var(--mask) no-repeat center / contain;
+  mask: var(--mask) no-repeat center / contain;
+}
+
+.symbol-bone {
+  color: var(--bg-main);
+  opacity: 0.96;
+}
+
+.symbol-core {
+  color: var(--point-sub);
+  opacity: 1;
+}
+
+.feeling-card .symbol-core {
+  color: var(--point-main);
+}
+
+@keyframes symbolCardFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg) scale(1);
   }
 
-  const pages = [
-    "./assets/images/minibook-01.png",
-    "./assets/images/minibook-02.png",
-    "./assets/images/minibook-03.png",
-    "./assets/images/minibook-04.png",
-    "./assets/images/minibook-05.png",
-    "./assets/images/minibook-06.png",
-    "./assets/images/minibook-07.png",
-    "./assets/images/minibook-08.png",
-    "./assets/images/minibook-09.png",
-    "./assets/images/minibook-10.png",
-    "./assets/images/minibook-11.png",
-    "./assets/images/minibook-12.png",
-    "./assets/images/minibook-13.png",
-    "./assets/images/minibook-14.png",
-    "./assets/images/minibook-15.png"
-  ];
+  50% {
+    transform: translateY(-9px) rotate(1deg) scale(1.03);
+  }
+}
 
-  let index = 0;
+/* =========================
+   OUTFIT ONLY FOR SMALL ENGLISH TEXT
+========================= */
 
-  function isMinibookMode() {
-    return modal.classList.contains("is-open") && modal.dataset.active === "minibook";
+/* 오른쪽 위 위젯 */
+.floating-widget button {
+  font-family: "OmphiEng", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+/* 기호 카드 뒷면 아래 영어 */
+.flip-card-back small {
+  font-family: "OmphiEng", sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.52;
+}
+
+/* =========================
+   FIX: flipped card stays flipped
+========================= */
+
+.flip-symbol-card.is-flipped .flip-card-inner {
+  transform: rotateY(180deg) !important;
+}
+
+.flip-symbol-card.is-flipped:hover .flip-card-inner {
+  transform: rotateY(180deg) !important;
+}
+
+.flip-card-front,
+.flip-card-back {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+.flip-symbol-card.is-flipped .flip-card-back {
+  pointer-events: auto;
+}
+
+.flip-symbol-card.is-flipped .flip-card-front {
+  pointer-events: none;
+}
+
+/* =========================
+   HUB FILM SECTION
+   same layout as pet interaction
+========================= */
+
+.hub-film {
+  background: var(--text-main);
+  color: var(--bg-main);
+  min-height: 100vh;
+  padding: 110px 6vw;
+
+  display: flex;
+  align-items: center;
+}
+
+.hub-film-inner {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.hub-film-copy {
+  color: var(--bg-main);
+}
+
+.hub-film-kicker {
+  margin: 0 0 18px;
+
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 34px;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+
+  color: var(--point-main);
+}
+
+.hub-film-title {
+  margin: 0;
+
+  font-family: "OmphiTitle", sans-serif;
+  font-size: clamp(44px, 5vw, 76px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+
+  color: var(--bg-main);
+}
+
+.hub-film-video-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 36px;
+  overflow: hidden;
+
+  background: color-mix(in srgb, var(--bg-main) 12%, transparent);
+  box-shadow:
+    0 28px 80px color-mix(in srgb, #000 24%, transparent),
+    0 0 42px color-mix(in srgb, var(--point-main) 18%, transparent);
+}
+
+.hub-film-video-wrap iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* =========================
+   PACKAGE SECTION
+========================= */
+
+.package {
+  position: relative;
+  min-height: 100vh;
+  padding: 550px 6vw 140px;
+  overflow: hidden;
+
+  /* 최종 바탕은 브랜드 파랑 */
+  background: var(--omphi-blue);
+  color: var(--bg-main);
+}
+
+/* 갈색 → 파랑 전환 영역 */
+.package::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 52vh;
+  pointer-events: none;
+  z-index: 1;
+
+  background:
+    linear-gradient(
+      to bottom,
+      var(--text-main) 0%,
+      var(--text-main) 16%,
+
+      color-mix(in srgb, var(--text-main) 94%, var(--omphi-blue) 6%) 25%,
+      color-mix(in srgb, var(--text-main) 86%, var(--omphi-blue) 14%) 34%,
+      color-mix(in srgb, var(--text-main) 76%, var(--omphi-blue) 24%) 43%,
+      color-mix(in srgb, var(--text-main) 64%, var(--omphi-blue) 36%) 52%,
+      color-mix(in srgb, var(--text-main) 50%, var(--omphi-blue) 50%) 62%,
+      color-mix(in srgb, var(--text-main) 36%, var(--omphi-blue) 64%) 72%,
+      color-mix(in srgb, var(--text-main) 22%, var(--omphi-blue) 78%) 83%,
+      color-mix(in srgb, var(--text-main) 10%, var(--omphi-blue) 90%) 93%,
+
+      var(--omphi-blue) 100%
+    );
+}
+
+/* 파랑 배경 위 은은한 빛 */
+.package::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+
+  background:
+    radial-gradient(
+      circle at 18% 28%,
+      color-mix(in srgb, var(--omphi-pink) 22%, transparent) 0%,
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 82% 24%,
+      color-mix(in srgb, white 30%, transparent) 0%,
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 50% 86%,
+      color-mix(in srgb, var(--bg-main) 30%, transparent) 0%,
+      transparent 38%
+    );
+
+  opacity: 0.02;
+}
+
+.package-inner {
+  position: relative;
+  z-index: 2;
+  width: min(1280px, 100%);
+  margin: 0 auto;
+}
+
+.package-copy {
+  width: min(680px, 100%);
+  margin: 0 auto 76px;
+  text-align: center;
+  color: var(--bg-main);
+}
+
+.package-kicker {
+  margin: 0 0 18px;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 34px;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--bg-main);
+}
+
+.package-title {
+  margin: 0 0 28px;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: clamp(48px, 6vw, 86px);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  color: var(--bg-main);
+}
+
+.package-desc {
+  margin: 0 auto;
+  font-size: 15px;
+  line-height: 1.9;
+  letter-spacing: -0.03em;
+  word-break: keep-all;
+  color: color-mix(in srgb, var(--bg-main) 88%, transparent);
+}
+
+/* 앞/뒷면 큰 사진 */
+.package-hero-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 56px);
+  align-items: start;
+  margin-bottom: 46px;
+}
+
+.package-shot {
+  margin: 0;
+  position: relative;
+  border-radius: 42px;
+  padding: clamp(24px, 3vw, 44px);
+
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, white 92%, transparent),
+      color-mix(in srgb, var(--bg-main) 78%, transparent)
+    );
+
+  box-shadow:
+    0 34px 90px color-mix(in srgb, #000 16%, transparent),
+    0 0 38px color-mix(in srgb, white 22%, transparent);
+
+  overflow: hidden;
+}
+
+.package-shot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 50% 16%,
+      color-mix(in srgb, var(--omphi-blue) 18%, transparent) 0%,
+      transparent 42%
+    );
+}
+
+.package-shot::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border-radius: 32px;
+  border: 1px solid color-mix(in srgb, var(--omphi-blue) 28%, transparent);
+  pointer-events: none;
+}
+
+.package-shot img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: min(68vh, 720px);
+  object-fit: contain;
+  display: block;
+
+  filter:
+    drop-shadow(0 22px 32px color-mix(in srgb, #000 15%, transparent))
+    drop-shadow(0 0 18px color-mix(in srgb, white 46%, transparent));
+
+  transition:
+    transform 0.35s ease,
+    filter 0.35s ease;
+}
+
+.package-shot:hover img {
+  transform: translateY(-8px) scale(1.018);
+
+  filter:
+    drop-shadow(0 30px 42px color-mix(in srgb, #000 18%, transparent))
+    drop-shadow(0 0 28px color-mix(in srgb, white 54%, transparent));
+}
+
+.package-shot figcaption {
+  position: relative;
+  z-index: 2;
+  margin-top: 18px;
+  font-family: "OmphiEng", "OmphiBody", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  text-align: center;
+  color: color-mix(in srgb, var(--text-main) 78%, transparent);
+}
+
+/* 아래 디테일 컷 */
+.package-detail-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.package-detail-card {
+  margin: 0;
+  border-radius: 30px;
+  padding: 18px;
+
+  background: color-mix(in srgb, white 74%, transparent);
+
+  box-shadow:
+    0 18px 46px color-mix(in srgb, #000 11%, transparent),
+    0 0 24px color-mix(in srgb, white 18%, transparent);
+
+  overflow: hidden;
+}
+
+.package-detail-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  display: block;
+}
+
+.package-detail-card figcaption {
+  margin-top: 12px;
+  font-family: "OmphiEng", "OmphiBody", sans-serif;
+  font-size: 12px;
+  text-align: center;
+  color: color-mix(in srgb, var(--text-main) 72%, transparent);
+}
+
+/* 반응형 */
+@media (max-width: 900px) {
+  .package {
+    padding: 180px 5vw 100px;
   }
 
-  function renderPage(nextIndex) {
-    index = (nextIndex + pages.length) % pages.length;
-
-    console.log("MINIBOOK PAGE:", index + 1, pages[index]);
-
-    img.style.opacity = "0.35";
-    img.style.transform = "rotateY(-12deg) translateX(14px) scale(0.96)";
-
-    setTimeout(() => {
-      img.src = pages[index];
-      if (title) title.textContent = `Mini Book ${index + 1} / ${pages.length}`;
-    }, 100);
-
-    setTimeout(() => {
-      img.style.opacity = "1";
-      img.style.transform = "none";
-    }, 260);
+  .package::before {
+    height: 30vh;
   }
 
-  minibookButton.addEventListener(
-    "click",
-    () => {
-      index = 0;
-      modal.dataset.active = "minibook";
-      img.src = pages[0];
+  .package-copy {
+    margin-bottom: 48px;
+  }
 
-      if (title) title.textContent = `Mini Book 1 / ${pages.length}`;
+  .package-hero-grid {
+    grid-template-columns: 1fr;
+  }
 
-      console.log("MINIBOOK OPENED");
-    },
-    true
+  .package-shot img {
+    height: auto;
+    max-height: 680px;
+  }
+
+  .package-detail-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   MAJOR PRODUCT TITLE
+   Omphi Pet / Omphi Symbol Hub / Package Image
+========================= */
+
+.major-title-head {
+  width: min(760px, 100%);
+  margin: 0 auto 72px;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+
+.major-title-label {
+  margin: 0 0 18px;
+  font-family: "OmphiEng", "OmphiBody", sans-serif;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.major-title-main {
+  margin: 0 0 24px;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: clamp(48px, 6vw, 82px);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  word-break: keep-all;
+}
+
+.major-title-desc {
+  margin: 0 auto;
+  width: min(620px, 100%);
+  font-family: "OmphiBody", sans-serif;
+  font-size: 15px;
+  line-height: 1.85;
+  letter-spacing: -0.035em;
+  word-break: keep-all;
+}
+
+/* 밝은 배경 */
+.major-title-head.is-light .major-title-label {
+  color: var(--point-sub);
+}
+
+.major-title-head.is-light .major-title-main {
+  color: var(--text-main);
+}
+
+.major-title-head.is-light .major-title-desc {
+  color: color-mix(in srgb, var(--text-main) 82%, transparent);
+}
+
+/* 갈색 배경 */
+.major-title-head.is-dark .major-title-label {
+  color: var(--point-sub);
+}
+
+.major-title-head.is-dark .major-title-main {
+  color: var(--bg-main);
+}
+
+.major-title-head.is-dark .major-title-desc {
+  color: color-mix(in srgb, var(--bg-main) 82%, transparent);
+}
+
+/* 파란 배경 */
+.major-title-head.is-blue .major-title-label,
+.major-title-head.is-blue .major-title-main {
+  color: var(--bg-main);
+}
+
+.major-title-head.is-blue .major-title-desc {
+  color: color-mix(in srgb, var(--bg-main) 86%, transparent);
+}
+
+@media (max-width: 760px) {
+  .major-title-head {
+    margin-bottom: 48px;
+  }
+
+  .major-title-main {
+    font-size: clamp(42px, 13vw, 64px);
+  }
+
+  .major-title-desc {
+    font-size: 14px;
+  }
+}
+
+/* Pet title motif under major title */
+.pet-major-head {
+  margin-bottom: 64px;
+}
+
+.pet-title-motif {
+  display: block;
+  width: min(540px, 54vw);
+  height: auto;
+  margin: 34px auto 0;
+  pointer-events: none;
+}
+
+/* Hub model centered under title */
+.hub-model-center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hub-model-center .hub-model-wrap {
+  width: min(620px, 54vw);
+  aspect-ratio: 1 / 1;
+  justify-self: center;
+}
+
+/* =========================
+   PET GUIDE TEXT CENTER FIX
+========================= */
+
+.pet-side-copy {
+  max-width: 360px;
+  text-align: center;
+}
+
+.pet-side-left,
+.pet-side-right {
+  justify-self: center;
+  text-align: center;
+}
+
+.pet-side-copy h3 {
+  text-align: center;
+}
+
+.copy-lead,
+.copy-list li,
+.copy-list strong,
+.copy-list span,
+.copy-note {
+  text-align: center;
+}
+
+.copy-list li {
+  margin-bottom: 24px;
+}
+
+/* =========================
+   LOVE COPY BOUNCY LETTERS
+========================= */
+
+.bouncy-word {
+  display: inline-flex;
+  gap: 0.02em;
+  vertical-align: baseline;
+  color: var(--point-main);
+}
+
+.bouncy-word span {
+  display: inline-block;
+  font-family: "OmphiTitle", sans-serif;
+  color: var(--point-main);
+
+  animation: malrangBounce 1.45s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.12s);
+  transform-origin: 50% 85%;
+}
+
+@keyframes malrangBounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  22% {
+    transform: translateY(-16px) scale(1.08, 0.94);
+  }
+
+  42% {
+    transform: translateY(3px) scale(0.96, 1.05);
+  }
+
+  58% {
+    transform: translateY(-7px) scale(1.03, 0.98);
+  }
+
+  74% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================
+   FINAL STORY TITLE OVERRIDE
+========================= */
+
+section.story .story-brand .story-kicker,
+section.story .story-brand .story-kicker span {
+  font-family: "OmphiTitle", sans-serif !important;
+  font-size: 64px !important;
+  line-height: 0.9 !important;
+  letter-spacing: -0.04em !important;
+}
+
+section.story .story-brand .story-subtitle {
+  font-family: "OmphiTitle", sans-serif !important;
+  font-size: 32px !important;
+  line-height: 2.0 !important;
+  letter-spacing: -0.04em !important;
+}
+
+/* =========================
+   PET SECTION BODY WEIGHT
+========================= */
+
+/* Omphi Pet 대제목 아래 설명문 */
+.pet-major-head .major-title-desc {
+  font-weight: 500;
+  color: color-mix(in srgb, var(--text-main) 92%, transparent);
+}
+
+/* 좌우 펫 설명 본문 */
+.pet-side-copy .copy-lead,
+.pet-side-copy .copy-list span,
+.pet-side-copy .copy-note {
+  font-weight: 500;
+  color: color-mix(in srgb, var(--text-main) 92%, transparent);
+}
+
+/* 좌우 설명 안의 소제목 */
+.pet-side-copy .copy-list strong {
+  font-weight: 600;
+}
+
+/* =========================
+   MAJOR TITLE LABEL - DONGLE
+   Omphi Pet / Omphi Symbol Hub / Package Image
+========================= */
+
+.major-title-label {
+  font-family: "OmphiTitle", sans-serif !important;
+  font-size: clamp(30px, 3.2vw, 46px) !important;
+  font-weight: 400 !important;
+  line-height: 0.9 !important;
+  letter-spacing: -0.035em !important;
+  text-transform: none !important;
+  margin: 0 0 18px !important;
+}
+
+/* =========================
+   GLOBAL TITLE LINE HEIGHT FIX
+========================= */
+
+:root {
+  --omphi-title-line-height: 1.08;
+}
+
+/* 큰 제품 타이틀 */
+.major-title-main,
+
+/* 영상 옆 타이틀 */
+.contact-title,
+
+/* 사랑은 말랑말랑한거야 */
+.love-copy p,
+
+/* 브랜드 스토리 타이틀 */
+.story .story-kicker,
+.story .story-kicker span,
+.story .story-subtitle,
+
+/* 소제목 중 큰 동글 제목 */
+.pet-side-copy h3,
+.hub-copy h3 {
+  line-height: var(--omphi-title-line-height) !important;
+}
+
+/* =========================
+   FINAL TITLE LINE HEIGHT OVERRIDE
+========================= */
+
+:root {
+  --omphi-title-line-height: 1.08;
+}
+
+.major-title-main,
+.contact-title,
+.love-copy p,
+.story .story-kicker,
+.story .story-kicker span,
+.story .story-subtitle,
+.pet-side-copy h3,
+.hub-copy h3,
+#hub-film h2,
+#hub-film .contact-title,
+#hub-film .hub-film-title,
+#hub-film .hub-film-copy p {
+  line-height: var(--omphi-title-line-height) !important;
+}
+
+/* =========================
+   ACCORDION LEAFLET VIEWER
+========================= */
+
+.accordion-leaflet {
+  grid-column: 1 / -1;
+  position: relative;
+  border-radius: 34px;
+  padding: 22px;
+  background: color-mix(in srgb, white 76%, transparent);
+  box-shadow:
+    0 22px 56px color-mix(in srgb, #000 12%, transparent),
+    0 0 28px color-mix(in srgb, white 18%, transparent);
+  overflow: hidden;
+}
+
+.accordion-leaflet-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(260px, 31vw, 430px);
+  border-radius: 26px;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: color-mix(in srgb, var(--bg-main) 88%, white 12%);
+  perspective: 1200px;
+}
+
+/* 표지 상태 */
+.leaflet-cover {
+  position: absolute;
+  width: min(300px, 38vw);
+  height: auto;
+  object-fit: contain;
+  z-index: 3;
+
+  transform-origin: center center;
+  transition:
+    opacity 0.34s ease,
+    transform 0.56s cubic-bezier(.2,.8,.2,1),
+    filter 0.34s ease;
+
+  filter:
+    drop-shadow(0 18px 28px color-mix(in srgb, #000 14%, transparent));
+}
+
+/* 펼친 앞/뒷면 */
+.leaflet-spread {
+  position: absolute;
+  width: 96%;
+  height: 86%;
+  object-fit: contain;
+  opacity: 0;
+  z-index: 2;
+
+  transform:
+    scaleX(0.18)
+    scaleY(0.72)
+    rotateY(-18deg);
+
+  transform-origin: center center;
+
+  transition:
+    opacity 0.34s ease,
+    transform 0.7s cubic-bezier(.18,.9,.2,1),
+    filter 0.34s ease;
+
+  filter:
+    drop-shadow(0 16px 26px color-mix(in srgb, #000 12%, transparent));
+}
+
+.leaflet-spread-back {
+  opacity: 0;
+}
+
+/* open 상태 */
+.accordion-leaflet.is-open .leaflet-cover {
+  opacity: 0;
+  transform: scale(0.74) rotateY(-20deg);
+  pointer-events: none;
+}
+
+.accordion-leaflet.is-open .leaflet-spread-front {
+  opacity: 1;
+  transform:
+    scaleX(1)
+    scaleY(1)
+    rotateY(0deg);
+}
+
+.accordion-leaflet.is-open.show-back .leaflet-spread-front {
+  opacity: 0;
+  transform:
+    scaleX(0.98)
+    scaleY(1)
+    rotateY(8deg);
+}
+
+.accordion-leaflet.is-open.show-back .leaflet-spread-back {
+  opacity: 1;
+  transform:
+    scaleX(1)
+    scaleY(1)
+    rotateY(0deg);
+}
+
+/* 살짝 접히는 그림자 느낌 */
+.accordion-leaflet-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to right,
+      transparent 0%,
+      color-mix(in srgb, #000 8%, transparent) 25%,
+      transparent 28%,
+      transparent 48%,
+      color-mix(in srgb, #000 7%, transparent) 50%,
+      transparent 53%,
+      transparent 72%,
+      color-mix(in srgb, #000 8%, transparent) 75%,
+      transparent 100%
+    );
+
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.accordion-leaflet.is-open .accordion-leaflet-stage::after {
+  opacity: 0.22;
+}
+
+/* 컨트롤 */
+.accordion-leaflet-control {
+  margin-top: 16px;
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.accordion-leaflet-control p {
+  margin: 0;
+  text-align: center;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: color-mix(in srgb, var(--text-main) 78%, transparent);
+}
+
+.accordion-leaflet-control button {
+  border: 1px solid color-mix(in srgb, var(--text-main) 22%, transparent);
+  background: color-mix(in srgb, white 66%, transparent);
+  color: var(--text-main);
+  border-radius: 999px;
+  padding: 8px 14px;
+
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 22px;
+  line-height: 1;
+  cursor: none;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.accordion-leaflet-control button:hover {
+  transform: translateY(-2px);
+  background: color-mix(in srgb, white 90%, transparent);
+}
+
+@media (max-width: 900px) {
+  .accordion-leaflet {
+    grid-column: auto;
+  }
+
+  .accordion-leaflet-stage {
+    height: 300px;
+  }
+
+  .leaflet-cover {
+    width: min(240px, 56vw);
+  }
+
+  .leaflet-spread {
+    width: 98%;
+    height: 84%;
+  }
+}
+
+/* =========================
+   PACKAGE SYMBOL CARD FLIP
+========================= */
+
+.package-flip-card {
+  position: relative;
+  border-radius: 30px;
+  padding: 18px;
+  background: color-mix(in srgb, white 74%, transparent);
+  box-shadow:
+    0 18px 46px color-mix(in srgb, #000 11%, transparent),
+    0 0 24px color-mix(in srgb, white 18%, transparent);
+  overflow: hidden;
+}
+
+.symbol-card-viewer {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: none;
+  perspective: 1200px;
+  display: block;
+}
+
+.symbol-card-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.72s cubic-bezier(.2,.8,.2,1);
+}
+
+.symbol-card-viewer.is-flipped .symbol-card-inner {
+  transform: rotateY(180deg);
+}
+
+.symbol-card-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  backface-visibility: hidden;
+  border-radius: 22px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bg-main) 88%, white 12%);
+}
+
+.symbol-card-back {
+  transform: rotateY(180deg);
+}
+
+.symbol-card-face img {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+  filter:
+    drop-shadow(0 12px 20px color-mix(in srgb, #000 10%, transparent));
+}
+
+.package-card-caption {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.package-card-caption p {
+  margin: 0;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: color-mix(in srgb, var(--text-main) 78%, transparent);
+}
+
+.package-card-caption span {
+  display: block;
+  margin-top: 6px;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--text-main) 52%, transparent);
+}
+
+/* =========================
+   SYMBOL CARD SIZE FIX
+========================= */
+
+.package-flip-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 기호카드는 세로형 카드라 4/3 말고 세로 비율 */
+.symbol-card-viewer {
+  width: min(200px, 82%);
+  aspect-ratio: 474 / 1686;
+  margin: 0 auto;
+}
+
+/* 카드 안쪽 이미지가 절대 잘리지 않게 */
+.symbol-card-face {
+  overflow: visible;
+  background: transparent;
+}
+
+.symbol-card-face img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+}
+
+/* =========================
+   PACKAGE LOOSE ITEMS
+========================= */
+
+.package-loose-stage {
+  position: relative;
+  width: min(1180px, 100%);
+  height: 520px;
+  margin: 90px auto 0;
+}
+
+.loose-item {
+  position: absolute;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: none;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+
+  transition:
+    transform 0.32s ease,
+    filter 0.32s ease;
+}
+
+.loose-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+
+  filter:
+    drop-shadow(0 24px 36px color-mix(in srgb, #000 18%, transparent))
+    drop-shadow(0 0 22px color-mix(in srgb, white 22%, transparent));
+}
+
+.loose-item span {
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--bg-main);
+  text-shadow: 0 2px 12px color-mix(in srgb, #000 14%, transparent);
+}
+
+.loose-item:hover {
+  transform: translateY(-12px) scale(1.035) rotate(var(--hover-rotate));
+  filter:
+    drop-shadow(0 0 24px color-mix(in srgb, white 24%, transparent));
+}
+
+/* 각 구성품 위치 */
+.loose-brand {
+  left: 2%;
+  top: 60px;
+  width: min(360px, 28vw);
+  transform: rotate(-7deg);
+  --hover-rotate: -4deg;
+}
+
+.loose-minibook {
+  left: 38%;
+  top: 10px;
+  width: min(230px, 18vw);
+  transform: rotate(4deg);
+  --hover-rotate: 2deg;
+}
+
+.loose-symbol {
+  right: 4%;
+  top: 72px;
+  width: min(210px, 17vw);
+  transform: rotate(7deg);
+  --hover-rotate: 4deg;
+}
+
+/* =========================
+   LOOSE MODAL
+========================= */
+
+.loose-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 5vw;
+}
+
+.loose-modal.is-open {
+  display: flex;
+}
+
+.loose-modal-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      color-mix(in srgb, var(--omphi-blue) 28%, transparent) 0%,
+      transparent 46%
+    ),
+    color-mix(in srgb, var(--text-main) 48%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.loose-modal-panel {
+  position: relative;
+  z-index: 2;
+  width: min(1180px, 100%);
+  min-height: min(720px, 86vh);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.loose-close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 5;
+
+  border: 1px solid color-mix(in srgb, var(--bg-main) 42%, transparent);
+  background: color-mix(in srgb, white 20%, transparent);
+  color: var(--bg-main);
+  border-radius: 999px;
+  padding: 9px 16px;
+
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 24px;
+  line-height: 1;
+  cursor: none;
+}
+
+.loose-modal-stage {
+  position: relative;
+  width: 100%;
+  height: min(560px, 68vh);
+  display: grid;
+  place-items: center;
+  perspective: 1400px;
+}
+
+.modal-content {
+  display: none;
+}
+
+.loose-modal[data-active="brand"] .modal-brand,
+.loose-modal[data-active="minibook"] .modal-minibook,
+.loose-modal[data-active="symbol"] .modal-symbol {
+  display: grid;
+  place-items: center;
+}
+
+/* Brand leaflet */
+.modal-brand {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-brand-cover {
+  width: min(360px, 48vw);
+  filter: drop-shadow(0 28px 46px color-mix(in srgb, #000 22%, transparent));
+  transition:
+    opacity 0.35s ease,
+    transform 0.7s cubic-bezier(.18,.9,.2,1);
+}
+
+.modal-brand-spread {
+  position: absolute;
+  width: min(1080px, 92vw);
+  max-height: 92%;
+  object-fit: contain;
+  opacity: 0;
+  transform: scaleX(0.18) scaleY(0.72) rotateY(-18deg);
+  filter: drop-shadow(0 28px 46px color-mix(in srgb, #000 20%, transparent));
+  transition:
+    opacity 0.35s ease,
+    transform 0.75s cubic-bezier(.18,.9,.2,1);
+}
+
+.loose-modal.brand-open .modal-brand-cover {
+  opacity: 0;
+  transform: scale(0.72) rotateY(-18deg);
+}
+
+.loose-modal.brand-open .modal-brand-front {
+  opacity: 1;
+  transform: scaleX(1) scaleY(1) rotateY(0deg);
+}
+
+.loose-modal.brand-open.brand-back .modal-brand-front {
+  opacity: 0;
+  transform: scaleX(0.98) rotateY(8deg);
+}
+
+.loose-modal.brand-open.brand-back .modal-brand-back {
+  opacity: 1;
+  transform: scaleX(1) scaleY(1) rotateY(0deg);
+}
+
+/* Mini book */
+.modal-minibook img {
+  width: min(520px, 70vw);
+  max-height: 72vh;
+  object-fit: contain;
+  filter: drop-shadow(0 28px 46px color-mix(in srgb, #000 20%, transparent));
+  transition:
+    opacity 0.25s ease,
+    transform 0.36s ease;
+}
+
+.loose-modal.page-changing .modal-minibook img {
+  opacity: 0.4;
+  transform: translateX(14px) rotateY(-8deg);
+}
+
+/* Symbol card modal */
+.modal-symbol {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: none;
+  perspective: 1200px;
+}
+
+.modal-symbol-inner {
+  position: relative;
+  display: block;
+  width: min(330px, 48vw);
+  aspect-ratio: 474 / 1686;
+  transform-style: preserve-3d;
+  transition: transform 0.72s cubic-bezier(.2,.8,.2,1);
+}
+
+.modal-symbol.is-flipped .modal-symbol-inner {
+  transform: rotateY(180deg);
+}
+
+.modal-symbol-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  backface-visibility: hidden;
+}
+
+.modal-symbol-back {
+  transform: rotateY(180deg);
+}
+
+.modal-symbol-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 28px 46px color-mix(in srgb, #000 20%, transparent));
+}
+
+/* controls */
+.loose-modal-controls {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 18px;
+  align-items: center;
+}
+
+.loose-modal-controls button {
+  border: 1px solid color-mix(in srgb, var(--bg-main) 42%, transparent);
+  background: color-mix(in srgb, white 20%, transparent);
+  color: var(--bg-main);
+  border-radius: 999px;
+  padding: 9px 16px;
+
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 24px;
+  line-height: 1;
+  cursor: none;
+}
+
+.modal-title {
+  margin: 0;
+  text-align: center;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--bg-main);
+}
+
+@media (max-width: 900px) {
+  .package-loose-stage {
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 54px;
+  }
+
+  .loose-item {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    width: min(320px, 76vw);
+    margin: 0 auto;
+  }
+
+  .loose-minibook,
+  .loose-symbol {
+    width: min(240px, 62vw);
+  }
+}
+
+/* =========================
+   LOOSE MODAL ZOOM + SYMBOL CARD FIX
+========================= */
+
+/* 버튼이 4칸이 되었으니 grid 수정 */
+.loose-modal-controls {
+  grid-template-columns: auto 1fr auto auto !important;
+}
+
+/* modal 전체 스테이지는 넘침 허용 */
+.loose-modal-stage {
+  overflow: visible !important;
+}
+
+/* symbol card modal 자체가 자르지 않게 */
+.modal-symbol {
+  overflow: visible !important;
+  transform: translateY(-30px);
+  display: none;
+  place-items: center;
+}
+
+/* 활성화 시만 보이기 */
+.loose-modal[data-active="symbol"] .modal-symbol {
+  display: grid !important;
+}
+
+/* 기호카드 비율 고정 + 화면 안에 전체가 들어오게 */
+.modal-symbol-inner {
+  width: auto !important;
+  height: min(72vh, 760px) !important;
+  aspect-ratio: 474 / 1686 !important;
+  max-width: 86vw !important;
+
+  transform-style: preserve-3d;
+  transition:
+    transform 0.72s cubic-bezier(.2,.8,.2,1),
+    height 0.32s ease;
+}
+
+.modal-symbol-face img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+/* flip 유지 */
+.modal-symbol.is-flipped .modal-symbol-inner {
+  transform: rotateY(180deg);
+}
+
+/* 앞뒷면 모두 절대 자르지 않게 */
+.modal-symbol-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  backface-visibility: hidden;
+  overflow: visible !important;
+}
+
+.modal-symbol-back {
+  transform: rotateY(180deg);
+}
+
+.modal-symbol-face img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block;
+}
+
+/* loose stage에 놓인 작은 기호카드도 안 잘리게 */
+.loose-symbol img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* 확대 모드 */
+.loose-modal.is-zoomed .loose-modal-stage {
+  height: min(760px, 78vh);
+}
+
+/* 브랜드 리플릿 확대 */
+.loose-modal.is-zoomed .modal-brand-spread {
+  width: min(1380px, 96vw) !important;
+  max-height: 86vh !important;
+}
+
+/* 미니북 확대 */
+.loose-modal.is-zoomed .modal-minibook img {
+  width: min(720px, 88vw) !important;
+  max-height: 84vh !important;
+}
+
+/* 기호카드 확대 */
+.loose-modal.is-zoomed .modal-symbol-inner {
+  height: min(86vh, 920px) !important;
+}
+
+/* 모바일에서는 너무 커지지 않게 */
+@media (max-width: 900px) {
+  .modal-symbol-inner {
+    height: min(68vh, 620px) !important;
+  }
+
+  .loose-modal.is-zoomed .modal-symbol-inner {
+    height: min(80vh, 760px) !important;
+  }
+
+  .loose-modal-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .modal-title {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+}
+
+/* =========================
+   MODAL CREAM GLOW INSTEAD OF SHADOW
+========================= */
+
+/* modal 배경도 조금 더 말랑하게 */
+.loose-modal-bg {
+  background:
+    radial-gradient(
+      circle at 50% 44%,
+      color-mix(in srgb, var(--bg-main) 34%, transparent) 0%,
+      color-mix(in srgb, var(--omphi-blue) 24%, transparent) 38%,
+      transparent 62%
+    ),
+    color-mix(in srgb, var(--omphi-blue) 76%, transparent);
+
+  backdrop-filter: blur(12px);
+}
+
+/* 모든 modal 이미지 그림자 제거 + 베이지 빛 */
+.modal-brand-cover,
+.modal-brand-spread,
+.modal-minibook img,
+.modal-symbol-face img,
+.loose-item img {
+  filter:
+    drop-shadow(0 0 24px color-mix(in srgb, var(--bg-main) 54%, transparent))
+    drop-shadow(0 0 54px color-mix(in srgb, var(--bg-main) 28%, transparent)) !important;
+}
+
+/* 중앙에 은은한 빛판 */
+.loose-modal-stage::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(720px, 70vw);
+  height: min(520px, 58vh);
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: -1;
+
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--bg-main) 46%, transparent) 0%,
+    color-mix(in srgb, var(--bg-main) 22%, transparent) 42%,
+    transparent 72%
   );
 
-  document.addEventListener(
-    "click",
-    (event) => {
-      if (!isMinibookMode()) return;
+  filter: blur(28px);
+}
 
-      const nextButton = event.target.closest(".modal-next");
-      const prevButton = event.target.closest(".modal-prev");
+/* =========================
+   WHEEL ZOOM TARGET
+========================= */
 
-      if (!nextButton && !prevButton) return;
+.zoom-target {
+  transform:
+    translate(var(--zoom-x, 0px), var(--zoom-y, 0px))
+    scale(var(--zoom-scale, 1)) !important;
 
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
+  transition:
+    transform 0.12s ease-out,
+    opacity 0.25s ease,
+    filter 0.25s ease;
+  will-change: transform;
+}
 
-      if (nextButton) {
-        renderPage(index + 1);
-      }
+/* 브랜드 리플릿은 기존 open transform과 충돌 방지 */
+.loose-modal.brand-open .modal-brand-front.zoom-target,
+.loose-modal.brand-open.brand-back .modal-brand-back.zoom-target {
+  opacity: 1;
+}
 
-      if (prevButton) {
-        renderPage(index - 1);
-      }
-    },
-    true
-  );
-})();
+/* 줌할 때 cursor 느낌 */
+.loose-modal-stage {
+  overflow: visible !important;
+}
 
-// -------------------------
-// Omphi Photo Booth
-// -------------------------
-const boothVideo = document.getElementById("boothVideo");
-const boothCanvas = document.getElementById("boothCanvas");
-const boothPreview = document.querySelector(".booth-preview");
+.loose-modal.is-zooming .loose-modal-stage {
+  cursor: none;
+}
 
-const startCameraBtn = document.getElementById("startCamera");
-const takePhotoBtn = document.getElementById("takePhoto");
-const retakePhotoBtn = document.getElementById("retakePhoto");
-const downloadPhoto = document.getElementById("downloadPhoto");
+/* =========================
+   MINIBOOK MODAL FINAL
+========================= */
 
-let boothStream = null;
+.modal-minibook {
+  width: 100%;
+  height: 100%;
+  place-items: center;
+}
 
-const boothLogoImg = new Image();
-boothLogoImg.src = "./assets/images/logo-omphi.png";
+.modal-minibook img {
+  width: auto !important;
+  height: min(78vh, 820px) !important;
+  max-width: 88vw !important;
+  object-fit: contain !important;
 
-const boothStickerImg = new Image();
-boothStickerImg.src = "./assets/images/pet-click-blue.png";
+  filter:
+    drop-shadow(0 0 24px color-mix(in srgb, var(--bg-main) 54%, transparent))
+    drop-shadow(0 0 54px color-mix(in srgb, var(--bg-main) 28%, transparent)) !important;
+}
 
-async function startBoothCamera() {
-  if (!boothVideo) return;
+/* 평소 널브러진 미니북 위치 */
+.loose-minibook {
+  left: 42%;
+  top: 20px;
+  width: min(190px, 15vw);
+  transform: rotate(4deg);
+  --hover-rotate: 2deg;
+}
 
-  try {
-    boothStream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: "user",
-        width: { ideal: 1280 },
-        height: { ideal: 960 }
-      },
-      audio: false
-    });
+.loose-minibook img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
 
-    boothVideo.srcObject = boothStream;
+/* =========================
+   PHOTO BOOTH
+========================= */
 
-    if (boothPreview) {
-      boothPreview.classList.remove("is-captured");
-    }
+.photo-booth {
+  position: relative;
+  min-height: 100vh;
+  padding: 150px 6vw 130px;
+  overflow: hidden;
+  background: var(--omphi-blue);
+  color: var(--bg-main);
+}
 
-    if (downloadPhoto) {
-      downloadPhoto.classList.remove("is-ready");
-      downloadPhoto.removeAttribute("href");
-    }
-  } catch (error) {
-    alert("카메라 권한을 허용해야 포토부스를 사용할 수 있어요!");
-    console.error("Camera error:", error);
+.photo-booth::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 22% 28%,
+      color-mix(in srgb, var(--bg-main) 34%, transparent) 0%,
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 82% 70%,
+      color-mix(in srgb, var(--omphi-pink) 20%, transparent) 0%,
+      transparent 32%
+    );
+
+  opacity: 0.7;
+}
+
+.photo-booth-inner {
+  position: relative;
+  z-index: 2;
+  width: min(1080px, 100%);
+  margin: 0 auto;
+}
+
+.booth-camera-card {
+  width: min(760px, 100%);
+  margin: 0 auto;
+  border-radius: 44px;
+  padding: clamp(18px, 3vw, 34px);
+
+  background: color-mix(in srgb, var(--bg-main) 72%, transparent);
+  box-shadow:
+    0 0 42px color-mix(in srgb, var(--bg-main) 24%, transparent);
+
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.booth-preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 32px;
+  overflow: hidden;
+
+  background: color-mix(in srgb, var(--text-main) 16%, transparent);
+  display: grid;
+  place-items: center;
+}
+
+.booth-preview video,
+.booth-preview canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.booth-preview canvas {
+  display: none;
+}
+
+.booth-preview.is-captured video {
+  display: none;
+}
+
+.booth-preview.is-captured canvas {
+  display: block;
+}
+
+.booth-frame {
+  position: absolute;
+  inset: 20px;
+  border-radius: 24px;
+  border: 3px solid color-mix(in srgb, var(--bg-main) 82%, transparent);
+  pointer-events: none;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px;
+}
+
+.booth-frame img {
+  width: 120px;
+  filter:
+    brightness(0)
+    invert(1)
+    drop-shadow(0 0 12px color-mix(in srgb, var(--text-main) 18%, transparent));
+}
+
+.booth-frame p {
+  margin: 0;
+  font-family: "OmphiTitle", sans-serif;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--bg-main);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--text-main) 20%, transparent);
+}
+
+.booth-controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.booth-controls button,
+.booth-controls a {
+  border: 1px solid color-mix(in srgb, var(--text-main) 18%, transparent);
+  background: color-mix(in srgb, var(--bg-main) 76%, transparent);
+  color: var(--text-main);
+  border-radius: 999px;
+  padding: 10px 18px;
+
+  font-family: "OmphiTitle", sans-serif;
+  font-size: 24px;
+  line-height: 1;
+  text-decoration: none;
+  cursor: none;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.booth-controls button:hover,
+.booth-controls a:hover {
+  transform: translateY(-2px);
+  background: color-mix(in srgb, var(--bg-main) 92%, transparent);
+}
+
+#downloadPhoto {
+  pointer-events: none;
+  opacity: 0.42;
+}
+
+#downloadPhoto.is-ready {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+@media (max-width: 760px) {
+  .photo-booth {
+    padding: 120px 5vw 100px;
+  }
+
+  .booth-frame img {
+    width: 92px;
   }
 }
 
-function takeBoothPhoto() {
-  if (!boothVideo || !boothCanvas || !boothPreview) return;
 
-  const width = boothVideo.videoWidth || 1280;
-  const height = boothVideo.videoHeight || 960;
 
-  boothCanvas.width = width;
-  boothCanvas.height = height;
+/* =========================
+   MOBILE
+========================= */
 
-  const ctx = boothCanvas.getContext("2d");
-
-  // 카메라 이미지
-  ctx.drawImage(boothVideo, 0, 0, width, height);
-
-  // omphi 프레임 느낌: 흰 테두리
-  const margin = Math.round(width * 0.04);
-  const radius = Math.round(width * 0.035);
-
-  ctx.lineWidth = Math.round(width * 0.012);
-  ctx.strokeStyle = "rgba(251, 246, 233, 0.95)";
-
-  roundRect(ctx, margin, margin, width - margin * 2, height - margin * 2, radius);
-  ctx.stroke();
-
-  // Photo booth overlay assets
-  const boothLogoImg = new Image();
-  boothLogoImg.src = "./assets/images/logo-omphi.png";
-
-  const boothSymbolImgs = [
-    "./assets/images/symbol_web-01.png",
-    "./assets/images/symbol_web-02.png",
-    "./assets/images/symbol_web-03.png",
-    "./assets/images/symbol_web-04.png",
-    "./assets/images/symbol_web-05.png"
-  ].map((src) => {
-    const img = new Image();
-    img.src = src;
-    return img;
-  });
-
-  boothPreview.classList.add("is-captured");
-
-  const imageUrl = boothCanvas.toDataURL("image/png");
-
-  if (downloadPhoto) {
-    downloadPhoto.href = imageUrl;
-    downloadPhoto.classList.add("is-ready");
+@media (max-width: 768px) {
+  body {
+    cursor: auto;
   }
-}
 
-function roundRect(ctx, x, y, width, height, radius) {
-  ctx.beginPath();
-  ctx.moveTo(x + radius, y);
-  ctx.lineTo(x + width - radius, y);
-  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-  ctx.lineTo(x + width, y + height - radius);
-  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-  ctx.lineTo(x + radius, y + height);
-  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-  ctx.lineTo(x, y + radius);
-  ctx.quadraticCurveTo(x, y, x + radius, y);
-  ctx.closePath();
-}
+  .custom-cursor {
+    display: none;
+  }
 
-if (startCameraBtn) {
-  startCameraBtn.addEventListener("click", (event) => {
-    event.stopPropagation();
-    startBoothCamera();
-  });
-}
+  .floating-widget {
+    left: 14px;
+    right: 14px;
+    top: 14px;
+    overflow-x: auto;
+  }
 
-if (takePhotoBtn) {
-  takePhotoBtn.addEventListener("click", (event) => {
-    event.stopPropagation();
-    takeBoothPhoto();
-  });
-}
+  .floating-widget button {
+    white-space: nowrap;
+    cursor: pointer;
+  }
 
-if (retakePhotoBtn) {
-  retakePhotoBtn.addEventListener("click", (event) => {
-    event.stopPropagation();
+  .pet-left-wrap {
+    width: 74vw;
+    left: -18vw;
+    bottom: 1vh;
+  }
 
-    if (boothPreview) {
-      boothPreview.classList.remove("is-captured");
-    }
+  .pet-right-wrap {
+    width: 69vw;
+    right: -17vw;
+    top: 9vh;
+  }
 
-    if (downloadPhoto) {
-      downloadPhoto.classList.remove("is-ready");
-      downloadPhoto.removeAttribute("href");
-    }
-  });
+  .hero-logo {
+    width: 41vw;
+    top: 49%;
+  }
+
+  .section {
+    padding: 72px 22px;
+  }
+
+  .two-column {
+    grid-template-columns: 1fr;
+  }
+
+  h2 {
+    font-size: clamp(48px, 16vw, 76px);
+  }
+
+  .story {
+    padding: 92px 24px 100px;
+    align-items: flex-start;
+  }
+
+  .story h2 {
+    font-size: clamp(48px, 15vw, 72px);
+    margin-bottom: 42px;
+  }
+
+  .story p {
+    font-size: 16px;
+    line-height: 1.95;
+    transform: none;
+  }
+
+  .love-copy {
+    padding: 0 24px;
+  }
+
+  .love-copy p {
+    font-size: 38px;
+    text-align: center;
+  }
+
+  .love-motif {
+    width: 160vw;
+  }
+
+  .product {
+    padding: 90px 24px;
+    overflow: visible;
+  }
+
+  .pet-guide-layout {
+    min-height: auto;
+  }
+
+  .pet-top-wrap {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 80px;
+  }
+
+  .pet-device-label {
+    font-size: 32px;
+    text-align: center;
+  }
+
+  .pet-guide-title-img {
+    width: 260px;
+  }
+
+  .pet-main-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 72px;
+  }
+
+  .pet-side-copy {
+    max-width: 100%;
+    padding-top: 0;
+    text-align: center;
+  }
+
+  .pet-side-left,
+  .pet-side-right {
+    justify-self: auto;
+    text-align: center;
+  }
+
+  .pet-center-wrap {
+    order: -1;
+  }
+
+  .pet-click-area {
+    width: min(420px, 86vw);
+    height: min(420px, 86vw);
+  }
+
+  .pet-click-button {
+    top: -48px;
+    font-size: 32px;
+  }
+
+  .contact {
+    padding: 90px 24px;
+  }
+
+  .contact-inner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .contact-copy {
+    text-align: center;
+  }
+
+  .contact-kicker {
+    font-size: 32px;
+  }
+
+  .contact-title {
+    font-size: 44px;
+  }
+
+  .contact-video-wrap {
+    border-radius: 24px;
+  }
+
+  .guide-line {
+    display: none;
+  }
+
+  .symbol-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dock-area {
+    flex-direction: column;
+    gap: 24px;
+  }
 }
